@@ -1,0 +1,505 @@
+{
+  "gameTitle": "Scassiotti Quest: O Resgate da Inclusão",
+  "levels": [
+    {
+      "id": 1,
+      "tier": 1,
+      "tierName": "Módulo 1: Apoio e Confiança (Ordem SVO)",
+      "title": "Fase 1: O Acolhimento na Escola",
+      "subtitle": "Comece sua jornada compreendendo quem apoia você (Sujeito + Verbo + Objeto)",
+      "enemy": {
+        "name": "Barreira da Insegurança",
+        "maxHp": 100,
+        "avatar": "/images/monster_sprite.webp"
+      },
+      "rounds": [
+        {
+          "roundId": 1,
+          "damageOnSuccess": 50,
+          "media": {
+            "videoUrl": "/videos/fase1_coord_ajuda_aluno.mp4",
+            "librasGloss": "COORDENADORA AJUDAR ALUNO",
+            "contextSentence": "Na escola, você nunca está sozinho: a coordenadora acolhe, orienta e ajuda o aluno a vencer a insegurança.",
+            "signSteps": [
+              { "order": 1, "role": "SUJEITO", "sign": "COORDENADORA", "cue": "Quem acolhe e orienta na escola" },
+              { "order": 2, "role": "VERBO", "sign": "AJUDAR", "cue": "Mão apoiando a outra para frente (dar suporte)" },
+              { "order": 3, "role": "OBJETO", "sign": "ALUNO", "cue": "Sinal de estudante (mão no braço / estudar)" }
+            ]
+          },
+          "syntaxChallenge": {
+            "expectedOrder": ["SUJEITO", "VERBO", "OBJETO"],
+            "slotCount": 3,
+            "correctTokens": [
+              { "id": "t1", "text": "A coordenadora", "role": "SUJEITO", "color": "blue" },
+              { "id": "t2", "text": "ajuda", "role": "VERBO", "color": "amber" },
+              { "id": "t3", "text": "o aluno", "role": "OBJETO", "color": "violet" }
+            ],
+            "distractors": [
+              { "id": "d1", "text": "ajudar", "role": "VERBO_INFINITIVO", "color": "slate" }
+            ]
+          },
+          "feedback": {
+            "successMessage": "Excelente! 'A coordenadora ajuda o aluno' — pedir e receber apoio é o primeiro passo para vencer a insegurança!",
+            "tip": {
+              "title": "Dica da Profª Scassiotti",
+              "description": "Em Libras o verbo aparece como AJUDAR, mas em Português conjugamos no presente: 'A coordenadora ajuda o aluno'.",
+              "recommendedFirstTokenId": "t1"
+            }
+          }
+        },
+        {
+          "roundId": 2,
+          "damageOnSuccess": 50,
+          "media": {
+            "videoUrl": "/videos/fase1_prof_apoia_surdo.mp4",
+            "librasGloss": "PROFESSORA APOIAR SURDO",
+            "contextSentence": "A professora acredita no seu potencial e apoia a pessoa surda em cada etapa do aprendizado.",
+            "signSteps": [
+              { "order": 1, "role": "SUJEITO", "sign": "PROFESSORA", "cue": "Quem ensina e caminha ao seu lado" },
+              { "order": 2, "role": "VERBO", "sign": "APOIAR", "cue": "Ação de incentivar e sustentar" },
+              { "order": 3, "role": "OBJETO", "sign": "SURDO", "cue": "Mão do ouvido à boca (identidade surda)" }
+            ]
+          },
+          "syntaxChallenge": {
+            "expectedOrder": ["SUJEITO", "VERBO", "OBJETO"],
+            "slotCount": 3,
+            "correctTokens": [
+              { "id": "t4", "text": "A professora", "role": "SUJEITO", "color": "blue" },
+              { "id": "t5", "text": "apoia", "role": "VERBO", "color": "amber" },
+              { "id": "t6", "text": "o surdo", "role": "OBJETO", "color": "violet" }
+            ],
+            "distractors": [
+              { "id": "d2", "text": "apoiar", "role": "VERBO_INFINITIVO", "color": "slate" }
+            ]
+          },
+          "feedback": {
+            "successMessage": "Perfeito! Você derrotou a Barreira da Insegurança com confiança e apoio!",
+            "tip": {
+              "title": "Dica da Profª Scassiotti",
+              "description": "Comece por QUEM pratica a ação ('A professora'), depois a AÇÃO conjugada ('apoia') e quem recebe o apoio ('o surdo').",
+              "recommendedFirstTokenId": "t4"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "tier": 1,
+      "tierName": "Módulo 1: União e Comunicação (Ordem SVO)",
+      "title": "Fase 2: A Força da Comunidade",
+      "subtitle": "Valorize quem caminha com você na escola e na família",
+      "enemy": {
+        "name": "Espectro da Hesitação",
+        "maxHp": 100,
+        "avatar": "/images/monster_hesitacao.webp"
+      },
+      "rounds": [
+        {
+          "roundId": 1,
+          "damageOnSuccess": 50,
+          "media": {
+            "videoUrl": "/videos/fase2_interprete_traduz_aula.mp4",
+            "librasGloss": "INTÉRPRETE TRADUZIR AULA",
+            "contextSentence": "Ter acesso ao conhecimento em Libras é um direito seu: o intérprete traduz a aula para que ninguém fique para trás.",
+            "signSteps": [
+              { "order": 1, "role": "SUJEITO", "sign": "INTÉRPRETE", "cue": "Profissional que faz a ponte entre Libras e Português" },
+              { "order": 2, "role": "VERBO", "sign": "TRADUZIR", "cue": "Mãos alternando sentidos de um idioma para outro" },
+              { "order": 3, "role": "OBJETO", "sign": "AULA", "cue": "Conteúdo ensinado na sala de aula" }
+            ]
+          },
+          "syntaxChallenge": {
+            "expectedOrder": ["SUJEITO", "VERBO", "OBJETO"],
+            "slotCount": 3,
+            "correctTokens": [
+              { "id": "t7", "text": "O intérprete", "role": "SUJEITO", "color": "blue" },
+              { "id": "t8", "text": "traduz", "role": "VERBO", "color": "amber" },
+              { "id": "t9", "text": "a aula", "role": "OBJETO", "color": "violet" }
+            ],
+            "distractors": [
+              { "id": "d3", "text": "traduzir", "role": "VERBO_INFINITIVO", "color": "slate" }
+            ]
+          },
+          "feedback": {
+            "successMessage": "Muito bem! 'O intérprete traduz a aula' — a comunicação acessível abre todas as portas!",
+            "tip": {
+              "title": "Dica da Profª Scassiotti",
+              "description": "No singular presente, o verbo TRADUZIR vira 'traduz': 'O intérprete traduz a aula'.",
+              "recommendedFirstTokenId": "t7"
+            }
+          }
+        },
+        {
+          "roundId": 2,
+          "damageOnSuccess": 50,
+          "media": {
+            "videoUrl": "/videos/fase2_familia_incentiva_jovem.mp4",
+            "librasGloss": "FAMÍLIA INCENTIVAR JOVEM",
+            "contextSentence": "Quando a família incentiva o jovem surdo, a hesitação desaparece e nasce a vontade de crescer.",
+            "signSteps": [
+              { "order": 1, "role": "SUJEITO", "sign": "FAMÍLIA", "cue": "Mãos em F formando um círculo de união" },
+              { "order": 2, "role": "VERBO", "sign": "INCENTIVAR", "cue": "Ação de motivar e impulsionar para frente" },
+              { "order": 3, "role": "OBJETO", "sign": "JOVEM", "cue": "Quem recebe o carinho e o incentivo" }
+            ]
+          },
+          "syntaxChallenge": {
+            "expectedOrder": ["SUJEITO", "VERBO", "OBJETO"],
+            "slotCount": 3,
+            "correctTokens": [
+              { "id": "t10", "text": "A família", "role": "SUJEITO", "color": "blue" },
+              { "id": "t11", "text": "incentiva", "role": "VERBO", "color": "amber" },
+              { "id": "t12", "text": "o jovem", "role": "OBJETO", "color": "violet" }
+            ],
+            "distractors": [
+              { "id": "d4", "text": "incentivar", "role": "VERBO_INFINITIVO", "color": "slate" }
+            ]
+          },
+          "feedback": {
+            "successMessage": "Incrível! Com apoio da escola e da família, o Espectro da Hesitação foi derrotado!",
+            "tip": {
+              "title": "Dica da Profª Scassiotti",
+              "description": "Quem motiva? 'A família'. Qual é a ação conjugada? 'incentiva'. Quem recebe? 'o jovem'.",
+              "recommendedFirstTokenId": "t10"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "tier": 2,
+      "tierName": "Módulo 2: Persistência e Superação (Plural)",
+      "title": "Fase 3: O Poder da Persistência",
+      "subtitle": "Aprenda a concordância no plural mostrando que juntos superamos qualquer obstáculo",
+      "enemy": {
+        "name": "Colosso do Desânimo",
+        "maxHp": 100,
+        "avatar": "/images/monster_desanimo.webp"
+      },
+      "rounds": [
+        {
+          "roundId": 1,
+          "damageOnSuccess": 50,
+          "media": {
+            "videoUrl": "/videos/fase3_estudantes_superam_desafios.mp4",
+            "librasGloss": "ESTUDANTE+ SUPERAR DESAFIO+",
+            "contextSentence": "Errar faz parte do aprendizado: com esforço diário, os estudantes superam os desafios e nunca desistem.",
+            "signSteps": [
+              { "order": 1, "role": "SUJEITO", "sign": "ESTUDANTE+ (Plural)", "cue": "Vários estudantes dedicados" },
+              { "order": 2, "role": "VERBO", "sign": "SUPERAR", "cue": "Mão ultrapassando uma barreira com firmeza" },
+              { "order": 3, "role": "OBJETO", "sign": "DESAFIO+ (Plural)", "cue": "Obstáculos vencidos pelo esforço" }
+            ]
+          },
+          "syntaxChallenge": {
+            "expectedOrder": ["SUJEITO", "VERBO", "OBJETO"],
+            "slotCount": 3,
+            "correctTokens": [
+              { "id": "t13", "text": "Os estudantes", "role": "SUJEITO", "color": "blue" },
+              { "id": "t14", "text": "superam", "role": "VERBO", "color": "amber" },
+              { "id": "t15", "text": "os desafios", "role": "OBJETO", "color": "violet" }
+            ],
+            "distractors": [
+              { "id": "d5", "text": "supera", "role": "VERBO_SINGULAR", "color": "slate" },
+              { "id": "d6", "text": "O estudante", "role": "SUJEITO_SINGULAR", "color": "slate" }
+            ]
+          },
+          "feedback": {
+            "successMessage": "Sensacional! 'Os estudantes superam os desafios' — a persistência quebra as correntes do desânimo!",
+            "tip": {
+              "title": "Atenção ao Plural (+)",
+              "description": "O sinal ESTUDANTE+ indica mais de uma pessoa ('Os estudantes'). No plural, o verbo ganha 'M' no final: 'superam'!",
+              "recommendedFirstTokenId": "t13"
+            }
+          }
+        },
+        {
+          "roundId": 2,
+          "damageOnSuccess": 50,
+          "media": {
+            "videoUrl": "/videos/fase3_surdos_conquistam_vitorias.mp4",
+            "librasGloss": "SURDO+ CONQUISTAR VITÓRIA+",
+            "contextSentence": "Com estudo, orgulho e dedicação, os surdos conquistam as vitórias nos estudos, no trabalho e na vida.",
+            "signSteps": [
+              { "order": 1, "role": "SUJEITO", "sign": "SURDO+ (Plural)", "cue": "Comunidade surda unida" },
+              { "order": 2, "role": "VERBO", "sign": "CONQUISTAR", "cue": "Mão fechando no alto em sinal de conquista" },
+              { "order": 3, "role": "OBJETO", "sign": "VITÓRIA+ (Plural)", "cue": "Muitas realizações alcançadas" }
+            ]
+          },
+          "syntaxChallenge": {
+            "expectedOrder": ["SUJEITO", "VERBO", "OBJETO"],
+            "slotCount": 3,
+            "correctTokens": [
+              { "id": "t16", "text": "Os surdos", "role": "SUJEITO", "color": "blue" },
+              { "id": "t17", "text": "conquistam", "role": "VERBO", "color": "amber" },
+              { "id": "t18", "text": "as vitórias", "role": "OBJETO", "color": "violet" }
+            ],
+            "distractors": [
+              { "id": "d7", "text": "conquista", "role": "VERBO_SINGULAR", "color": "slate" },
+              { "id": "d8", "text": "a vitória", "role": "OBJETO_SINGULAR", "color": "slate" }
+            ]
+          },
+          "feedback": {
+            "successMessage": "Vitória brilhante! A sua persistência derrubou o Colosso do Desânimo!",
+            "tip": {
+              "title": "Concordância no Plural",
+              "description": "'Os surdos' e 'as vitórias' estão no plural. Por isso, use o verbo no plural com 'M': 'conquistam'.",
+              "recommendedFirstTokenId": "t16"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "tier": 2,
+      "tierName": "Módulo 2: Convivência e Esperança (Preposições)",
+      "title": "Fase 4: Pontes da Empatia",
+      "subtitle": "Use preposições do português para expressar amizade, diálogo e fé no futuro",
+      "enemy": {
+        "name": "Guardião do Isolamento",
+        "maxHp": 100,
+        "avatar": "/images/monster_isolamento.webp"
+      },
+      "rounds": [
+        {
+          "roundId": 1,
+          "damageOnSuccess": 50,
+          "media": {
+            "videoUrl": "/videos/fase4_amigo_conversa_libras.mp4",
+            "librasGloss": "AMIGO CONVERSAR LIBRAS",
+            "contextSentence": "A verdadeira amizade derruba o isolamento: o amigo aprende sinais e conversa em Libras com respeito.",
+            "signSteps": [
+              { "order": 1, "role": "SUJEITO", "sign": "AMIGO", "cue": "Mão no peito indicando afeto e parceria" },
+              { "order": 2, "role": "VERBO", "sign": "CONVERSAR", "cue": "Mãos dialogando em troca amigável" },
+              { "order": 3, "role": "OBJETO", "sign": "LIBRAS", "cue": "Em Português conectamos o idioma com 'em Libras'" }
+            ]
+          },
+          "syntaxChallenge": {
+            "expectedOrder": ["SUJEITO", "VERBO", "OBJETO"],
+            "slotCount": 3,
+            "correctTokens": [
+              { "id": "t19", "text": "O amigo", "role": "SUJEITO", "color": "blue" },
+              { "id": "t20", "text": "conversa", "role": "VERBO", "color": "amber" },
+              { "id": "t21", "text": "em Libras", "role": "OBJETO", "color": "violet" }
+            ],
+            "distractors": [
+              { "id": "d9", "text": "Libras", "role": "SEM_PREPOSICAO", "color": "slate" },
+              { "id": "d10", "text": "conversar", "role": "VERBO_INFINITIVO", "color": "slate" }
+            ]
+          },
+          "feedback": {
+            "successMessage": "Excelente! 'O amigo conversa em Libras' — o diálogo aproxima as pessoas e derrete o isolamento!",
+            "tip": {
+              "title": "Conectivo 'em'",
+              "description": "Em Libras sinalizamos CONVERSAR LIBRAS, mas na escrita em Português usamos a preposição 'em': 'conversa em Libras'.",
+              "recommendedFirstTokenId": "t19"
+            }
+          }
+        },
+        {
+          "roundId": 2,
+          "damageOnSuccess": 50,
+          "media": {
+            "videoUrl": "/videos/fase4_jovem_acredita_futuro.mp4",
+            "librasGloss": "JOVEM ACREDITAR FUTURO",
+            "contextSentence": "Quem tem esperança nunca caminha no escuro: o jovem surdo estuda hoje porque acredita no futuro.",
+            "signSteps": [
+              { "order": 1, "role": "SUJEITO", "sign": "JOVEM", "cue": "Estudante cheio de sonhos" },
+              { "order": 2, "role": "VERBO", "sign": "ACREDITAR", "cue": "Mão da testa ao peito/frente (ter fé e confiança)" },
+              { "order": 3, "role": "OBJETO", "sign": "FUTURO", "cue": "Mão em F avançando para o horizonte ('no futuro')" }
+            ]
+          },
+          "syntaxChallenge": {
+            "expectedOrder": ["SUJEITO", "VERBO", "OBJETO"],
+            "slotCount": 3,
+            "correctTokens": [
+              { "id": "t22", "text": "O jovem", "role": "SUJEITO", "color": "blue" },
+              { "id": "t23", "text": "acredita", "role": "VERBO", "color": "amber" },
+              { "id": "t24", "text": "no futuro", "role": "OBJETO", "color": "violet" }
+            ],
+            "distractors": [
+              { "id": "d11", "text": "futuro", "role": "SEM_PREPOSICAO", "color": "slate" },
+              { "id": "d12", "text": "acreditar", "role": "VERBO_INFINITIVO", "color": "slate" }
+            ]
+          },
+          "feedback": {
+            "successMessage": "Maravilha! Com amizade e esperança no futuro, o Guardião do Isolamento foi vencido!",
+            "tip": {
+              "title": "Preposição 'no' (em + o)",
+              "description": "Em Português, quem acredita, acredita 'em' algo: por isso escrevemos 'O jovem acredita no futuro'.",
+              "recommendedFirstTokenId": "t22"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "tier": 3,
+      "tierName": "Módulo 3: Motivação e Autoconfiança",
+      "title": "Fase 5: A Chama da Motivação",
+      "subtitle": "Construa frases inspiradoras sobre coragem, sonhos e autoconfiança",
+      "enemy": {
+        "name": "Tempestade da Dúvida",
+        "maxHp": 100,
+        "avatar": "/images/monster_duvida.webp"
+      },
+      "rounds": [
+        {
+          "roundId": 1,
+          "damageOnSuccess": 50,
+          "media": {
+            "videoUrl": "/videos/fase5_persistencia_realiza_sonhos.mp4",
+            "librasGloss": "PERSISTÊNCIA REALIZAR SONHO+",
+            "contextSentence": "Não importa quantas vezes seja preciso tentar de novo: a persistência realiza os sonhos de quem continua estudando.",
+            "signSteps": [
+              { "order": 1, "role": "SUJEITO", "sign": "PERSISTÊNCIA", "cue": "Força interior de continuar tentando sempre" },
+              { "order": 2, "role": "VERBO", "sign": "REALIZAR", "cue": "Tornar real e concreto aquilo que se deseja" },
+              { "order": 3, "role": "OBJETO", "sign": "SONHO+ (Plural)", "cue": "Seus projetos e objetivos de vida" }
+            ]
+          },
+          "syntaxChallenge": {
+            "expectedOrder": ["SUJEITO", "VERBO", "OBJETO"],
+            "slotCount": 3,
+            "correctTokens": [
+              { "id": "t25", "text": "A persistência", "role": "SUJEITO", "color": "blue" },
+              { "id": "t26", "text": "realiza", "role": "VERBO", "color": "amber" },
+              { "id": "t27", "text": "os sonhos", "role": "OBJETO", "color": "violet" }
+            ],
+            "distractors": [
+              { "id": "d13", "text": "realizar", "role": "VERBO_INFINITIVO", "color": "slate" },
+              { "id": "d14", "text": "realizam", "role": "VERBO_PLURAL", "color": "slate" }
+            ]
+          },
+          "feedback": {
+            "successMessage": "Perfeito! 'A persistência realiza os sonhos' — nunca deixe a dúvida apagar os seus objetivos!",
+            "tip": {
+              "title": "Dica da Profª Scassiotti",
+              "description": "O verbo concorda com o sujeito ('A persistência', que está no singular): por isso usamos 'realiza', mesmo que 'os sonhos' esteja no plural!",
+              "recommendedFirstTokenId": "t25"
+            }
+          }
+        },
+        {
+          "roundId": 2,
+          "damageOnSuccess": 50,
+          "media": {
+            "videoUrl": "/videos/fase5_coragem_vence_medo.mp4",
+            "librasGloss": "CORAGEM VENCER MEDO",
+            "contextSentence": "Sentir receio diante do novo é natural, mas a sua coragem vence o medo todos os dias.",
+            "signSteps": [
+              { "order": 1, "role": "SUJEITO", "sign": "CORAGEM", "cue": "Força e determinação no peito" },
+              { "order": 2, "role": "VERBO", "sign": "VENCER", "cue": "Ação de superar e triunfar" },
+              { "order": 3, "role": "OBJETO", "sign": "MEDO", "cue": "Sentimento que fica para trás quando confiamos em nós" }
+            ]
+          },
+          "syntaxChallenge": {
+            "expectedOrder": ["SUJEITO", "VERBO", "OBJETO"],
+            "slotCount": 3,
+            "correctTokens": [
+              { "id": "t28", "text": "A coragem", "role": "SUJEITO", "color": "blue" },
+              { "id": "t29", "text": "vence", "role": "VERBO", "color": "amber" },
+              { "id": "t30", "text": "o medo", "role": "OBJETO", "color": "violet" }
+            ],
+            "distractors": [
+              { "id": "d15", "text": "vencer", "role": "VERBO_INFINITIVO", "color": "slate" },
+              { "id": "d16", "text": "vencem", "role": "VERBO_PLURAL", "color": "slate" }
+            ]
+          },
+          "feedback": {
+            "successMessage": "Extraordinário! A sua autoconfiança dissipou a Tempestade da Dúvida!",
+            "tip": {
+              "title": "Dica da Profª Scassiotti",
+              "description": "Qual valor derrota o medo? 'A coragem' (Sujeito) + 'vence' (Verbo no presente) + 'o medo' (Objeto).",
+              "recommendedFirstTokenId": "t28"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "tier": 3,
+      "tierName": "Módulo 3: Valores Humanos e Inclusão",
+      "title": "Fase 6: A Vitória da Inclusão",
+      "subtitle": "Conclua sua jornada derrubando o preconceito com respeito e igualdade",
+      "enemy": {
+        "name": "Muralha do Preconceito",
+        "maxHp": 100,
+        "avatar": "/images/monster_preconceito.webp"
+      },
+      "rounds": [
+        {
+          "roundId": 1,
+          "damageOnSuccess": 50,
+          "media": {
+            "videoUrl": "/videos/fase6_respeito_constroi_igualdade.mp4",
+            "librasGloss": "RESPEITO CONSTRUIR IGUALDADE",
+            "contextSentence": "Valorizar a cultura surda e a língua de sinais é essencial: o respeito constrói a igualdade entre todos.",
+            "signSteps": [
+              { "order": 1, "role": "SUJEITO", "sign": "RESPEITO", "cue": "Valor humano de consideração ao próximo" },
+              { "order": 2, "role": "VERBO", "sign": "CONSTRUIR", "cue": "Mãos erguendo uma base sólida" },
+              { "order": 3, "role": "OBJETO", "sign": "IGUALDADE", "cue": "Mãos alinhadas no mesmo nível (direitos iguais)" }
+            ]
+          },
+          "syntaxChallenge": {
+            "expectedOrder": ["SUJEITO", "VERBO", "OBJETO"],
+            "slotCount": 3,
+            "correctTokens": [
+              { "id": "t31", "text": "O respeito", "role": "SUJEITO", "color": "blue" },
+              { "id": "t32", "text": "constrói", "role": "VERBO", "color": "amber" },
+              { "id": "t33", "text": "a igualdade", "role": "OBJETO", "color": "violet" }
+            ],
+            "distractors": [
+              { "id": "d17", "text": "construir", "role": "VERBO_INFINITIVO", "color": "slate" },
+              { "id": "d18", "text": "constroem", "role": "VERBO_PLURAL", "color": "slate" }
+            ]
+          },
+          "feedback": {
+            "successMessage": "Lindo golpe! 'O respeito constrói a igualdade' — nenhuma muralha resiste ao respeito!",
+            "tip": {
+              "title": "Dica da Profª Scassiotti",
+              "description": "Em Português, o verbo CONSTRUIR no singular presente escreve-se 'constrói': 'O respeito constrói a igualdade'.",
+              "recommendedFirstTokenId": "t31"
+            }
+          }
+        },
+        {
+          "roundId": 2,
+          "damageOnSuccess": 50,
+          "media": {
+            "videoUrl": "/videos/fase6_inclusao_transforma_sociedade.mp4",
+            "librasGloss": "INCLUSÃO TRANSFORMAR SOCIEDADE",
+            "contextSentence": "Quando cada pessoa surda ocupa seu espaço com orgulho, a inclusão transforma a sociedade inteira!",
+            "signSteps": [
+              { "order": 1, "role": "SUJEITO", "sign": "INCLUSÃO", "cue": "Mãos unindo todos dentro do mesmo espaço" },
+              { "order": 2, "role": "VERBO", "sign": "TRANSFORMAR", "cue": "Movimento de mudança positiva e evolução" },
+              { "order": 3, "role": "OBJETO", "sign": "SOCIEDADE", "cue": "Coletivo de todas as pessoas" }
+            ]
+          },
+          "syntaxChallenge": {
+            "expectedOrder": ["SUJEITO", "VERBO", "OBJETO"],
+            "slotCount": 3,
+            "correctTokens": [
+              { "id": "t34", "text": "A inclusão", "role": "SUJEITO", "color": "blue" },
+              { "id": "t35", "text": "transforma", "role": "VERBO", "color": "amber" },
+              { "id": "t36", "text": "a sociedade", "role": "OBJETO", "color": "violet" }
+            ],
+            "distractors": [
+              { "id": "d19", "text": "transformar", "role": "VERBO_INFINITIVO", "color": "slate" },
+              { "id": "d20", "text": "transformam", "role": "VERBO_PLURAL", "color": "slate" }
+            ]
+          },
+          "feedback": {
+            "successMessage": "Parabéns! Você derrubou a Muralha do Preconceito e completou o Resgate da Inclusão!",
+            "tip": {
+              "title": "Dica da Profª Scassiotti",
+              "description": "Monte a frase final da nossa jornada: 'A inclusão' (Quem) + 'transforma' (Ação) + 'a sociedade' (Alvo).",
+              "recommendedFirstTokenId": "t34"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

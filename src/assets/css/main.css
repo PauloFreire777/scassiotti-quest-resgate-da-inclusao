@@ -1,0 +1,457 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   DESIGN SYSTEM — "CREPÚSCULO NO CAMPUS"
+   Princípios (Deaf-First): comunicação por forma + cor + ícone (nunca só cor),
+   texto curto e grande, alto contraste, feedback visual redundante,
+   movimento opcional (prefers-reduced-motion) e alvos de toque ≥ 44px.
+   ========================================================================== */
+
+:root {
+  --ink: #2b2150;
+  --night: #130f2e;
+
+  /* Papéis sintáticos: RGB separado permite usar com transparência */
+  --role-sujeito: 59 130 246;
+  --role-verbo: 34 197 94;
+  --role-objeto: 245 158 11;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  background-color: var(--night);
+  color: #fff;
+  font-family: 'Nunito Variable', Nunito, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Foco de alta visibilidade (navegação por teclado) */
+*:focus-visible {
+  outline: 4px solid #7dd3fc !important;
+  outline-offset: 3px !important;
+  border-radius: 12px;
+}
+
+@layer components {
+  /* ------------------------------------------------------------------------
+     CENÁRIO
+     ------------------------------------------------------------------------ */
+  .scene-bg {
+    background:
+      radial-gradient(90% 55% at 50% 105%, rgba(255, 178, 92, 0.38) 0%, rgba(255, 178, 92, 0) 70%),
+      radial-gradient(60% 40% at 15% 20%, rgba(125, 211, 252, 0.14) 0%, rgba(125, 211, 252, 0) 70%),
+      linear-gradient(180deg, #231a5a 0%, #3d2a86 52%, #6b3f9c 100%);
+  }
+
+  /* Janelas arqueadas da biblioteca ao fundo (acolhimento acadêmico) */
+  .scene-window {
+    position: absolute;
+    top: 14%;
+    width: clamp(48px, 11vw, 96px);
+    height: clamp(90px, 28%, 190px);
+    border-radius: 999px 999px 8px 8px;
+    background: linear-gradient(180deg, rgba(255, 214, 140, 0.5) 0%, rgba(255, 170, 90, 0.16) 100%);
+    border: 3px solid rgba(255, 226, 170, 0.28);
+    box-shadow: 0 0 40px rgba(255, 190, 110, 0.18);
+    pointer-events: none;
+  }
+
+  @media (max-width: 639px) {
+    .scene-window {
+      top: 38%;
+      height: 24%;
+      width: 56px;
+    }
+  }
+
+  .scene-floor {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 30%;
+    background:
+      repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 72px),
+      linear-gradient(180deg, #4a3496 0%, #2a1f66 100%);
+    border-top: 3px solid rgba(255, 255, 255, 0.14);
+    pointer-events: none;
+  }
+
+  .ground-shadow {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 78%;
+    height: 14px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(8, 5, 28, 0.55) 0%, transparent 70%);
+  }
+
+  /* Mesa da professora: esconde o corte do busto e dá "chão" ao personagem */
+  .teacher-desk {
+    position: absolute;
+    inset: auto 4% 0 4%;
+    height: 17%;
+    border-radius: 18px 18px 6px 6px;
+    background: linear-gradient(180deg, #c98b4b 0%, #8a5428 100%);
+    border-top: 4px solid #e8b676;
+    box-shadow: 0 -6px 18px rgba(8, 5, 28, 0.25);
+  }
+
+  .teacher-desk::before {
+    content: '';
+    position: absolute;
+    left: 14%;
+    top: -16px;
+    width: 30%;
+    height: 16px;
+    border-radius: 6px 6px 0 0;
+    background: linear-gradient(90deg, #fff7e0 0 49%, #cdb98a 49% 51%, #fff7e0 51% 100%);
+    box-shadow: 0 -3px 0 #38bdf8;
+  }
+
+  /* Sprite com borda direita suavizada (o braço da imagem original é cortado) */
+  .fade-edge-right {
+    -webkit-mask-image: linear-gradient(to right, #000 82%, transparent 100%);
+    mask-image: linear-gradient(to right, #000 82%, transparent 100%);
+  }
+
+  /* ------------------------------------------------------------------------
+     PAINÉIS
+     ------------------------------------------------------------------------ */
+  .panel-console {
+    background: linear-gradient(180deg, #2a2350 0%, #1d1840 100%);
+    border-top: 3px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 -12px 30px rgba(8, 5, 28, 0.45);
+  }
+
+  .nameplate {
+    background: rgba(19, 15, 46, 0.62);
+    border: 2px solid rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(6px);
+  }
+
+  .sign-card {
+    background: linear-gradient(180deg, rgba(29, 24, 64, 0.94) 0%, rgba(19, 15, 46, 0.94) 100%);
+    border: 3px solid rgba(125, 211, 252, 0.55);
+    box-shadow: 0 10px 28px rgba(8, 5, 28, 0.5), 0 0 0 4px rgba(125, 211, 252, 0.08);
+    backdrop-filter: blur(8px);
+  }
+
+  /* ------------------------------------------------------------------------
+     BOTÕES "CHUNKY" (físicos: afundam ao tocar)
+     ------------------------------------------------------------------------ */
+  .btn-chunky {
+    --btn-face: #fff3da;
+    --btn-edge: #c9ae72;
+    --btn-ink: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 48px;
+    padding: 0.5rem 1.1rem;
+    border-radius: 1rem;
+    font-weight: 900;
+    font-size: 1rem;
+    line-height: 1.1;
+    background: var(--btn-face);
+    color: var(--btn-ink);
+    box-shadow: 0 5px 0 var(--btn-edge), 0 10px 18px rgba(8, 5, 28, 0.35);
+    transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, filter 0.15s;
+    cursor: pointer;
+  }
+
+  .btn-chunky:hover:not(:disabled) {
+    transform: translateY(-2px);
+    filter: brightness(1.06);
+  }
+
+  .btn-chunky:active:not(:disabled) {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 var(--btn-edge), 0 4px 8px rgba(8, 5, 28, 0.35);
+  }
+
+  .btn-chunky:disabled {
+    opacity: 0.5;
+    filter: saturate(0.4);
+    cursor: not-allowed;
+  }
+
+  .btn-go {
+    --btn-face: #34d399;
+    --btn-edge: #047857;
+    --btn-ink: #022c22;
+  }
+
+  .btn-amber {
+    --btn-face: #fbbf24;
+    --btn-edge: #b45309;
+    --btn-ink: #3b1d00;
+  }
+
+  .btn-ghost {
+    --btn-face: rgba(255, 255, 255, 0.12);
+    --btn-edge: rgba(8, 5, 28, 0.55);
+    --btn-ink: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.22);
+  }
+
+  /* ------------------------------------------------------------------------
+     CARTAS DE PALAVRA (papel) E ENCAIXES (sockets)
+     ------------------------------------------------------------------------ */
+  .tile {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    max-width: 100%;
+    padding: 0.7rem 1.15rem;
+    border-radius: 1rem;
+    background: linear-gradient(180deg, #fffaf0 0%, #fff0cf 100%);
+    color: var(--ink);
+    font-weight: 900;
+    font-size: clamp(1.05rem, 4.2vw, 1.3rem);
+    line-height: 1.15;
+    text-align: center;
+    box-shadow: 0 4px 0 #c9ae72, 0 8px 14px rgba(8, 5, 28, 0.38);
+    cursor: grab;
+    transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, opacity 0.12s;
+  }
+
+  .tile:hover:not(:disabled) {
+    transform: translateY(-3px);
+  }
+
+  .tile:active:not(:disabled) {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #c9ae72, 0 3px 6px rgba(8, 5, 28, 0.38);
+    cursor: grabbing;
+  }
+
+  .tile:disabled {
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  .tile--placed {
+    padding: 0.45rem 0.3rem;
+    font-size: clamp(0.76rem, 3.1vw, 1.15rem);
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .tile--placed {
+      padding: 0.55rem 0.65rem;
+      font-size: 1.15rem;
+    }
+  }
+
+  .tile--dragging {
+    opacity: 0.45;
+  }
+
+  .tile--hint {
+    outline: 4px solid #7dd3fc;
+    outline-offset: 2px;
+    animation: hintPulse 1.2s ease-in-out infinite;
+  }
+
+  .tile--invalid {
+    background: linear-gradient(180deg, #fff1f2 0%, #ffd9de 100%);
+    box-shadow: 0 4px 0 #be123c, 0 8px 14px rgba(8, 5, 28, 0.38);
+    outline: 4px solid #fb7185;
+    outline-offset: 2px;
+  }
+
+  .socket {
+    --sock: var(--role-sujeito);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-height: 104px;
+    padding: 0.4rem;
+    border-radius: 1.15rem;
+    border: 3px dashed rgb(var(--sock) / 0.75);
+    background: rgb(var(--sock) / 0.14);
+    transition: transform 0.15s ease-out, background 0.15s, box-shadow 0.15s, border-color 0.15s;
+  }
+
+  @media (min-width: 640px) {
+    .socket {
+      padding: 0.55rem;
+    }
+  }
+
+  .socket--filled {
+    border-style: solid;
+    background: rgb(var(--sock) / 0.26);
+  }
+
+  .socket--over {
+    transform: scale(1.04);
+    background: rgb(var(--sock) / 0.34);
+    box-shadow: 0 0 0 5px rgb(var(--sock) / 0.35);
+  }
+
+  .socket--invalid {
+    --sock: 244 63 94;
+    border-style: solid;
+    animation: subtleShake 0.3s ease-in-out;
+  }
+
+  /* ------------------------------------------------------------------------
+     BARRAS DE ENERGIA
+     ------------------------------------------------------------------------ */
+  .hp-track {
+    position: relative;
+    height: 16px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(8, 5, 28, 0.75);
+    border: 2px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .hp-fill,
+  .hp-ghost {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: 999px;
+  }
+
+  .hp-fill {
+    background: linear-gradient(180deg, #fb7185 0%, #e11d48 100%);
+    transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* "Rastro" do dano: segue a barra com atraso, mostrando quanto foi perdido */
+  .hp-ghost {
+    background: #fde68a;
+    transition: width 0.9s ease-out 0.35s;
+  }
+}
+
+/* ==========================================================================
+   EFEITOS DE JOGO (feedback visual redundante para surdos)
+   ========================================================================== */
+
+.flash-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+}
+
+.flash-overlay.flash-emerald {
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.35) 0%, rgba(52, 211, 153, 0.05) 75%);
+  animation: flashFade 0.4s ease-out forwards;
+}
+
+.flash-overlay.flash-crimson {
+  background: radial-gradient(circle, rgba(251, 113, 133, 0.35) 0%, rgba(251, 113, 133, 0.05) 75%);
+  animation: flashFade 0.4s ease-out forwards;
+}
+
+@keyframes flashFade {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.shockwave-element {
+  position: fixed;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 6px solid #fde68a;
+  box-shadow: 0 0 40px #fbbf24, inset 0 0 25px #fbbf24;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%) scale(0.1);
+  animation: shockwaveAnim 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes shockwaveAnim {
+  0% { transform: translate(-50%, -50%) scale(0.1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(3.5); opacity: 0; }
+}
+
+/* Texto de dano/alerta: contorno forte (legível sobre qualquer fundo) */
+.combat-text {
+  position: fixed;
+  z-index: 10000;
+  pointer-events: none;
+  white-space: nowrap;
+  font-weight: 1000;
+  letter-spacing: 0.02em;
+  -webkit-text-stroke: 6px #130f2e;
+  paint-order: stroke fill;
+  text-shadow: 0 6px 16px rgba(8, 5, 28, 0.7);
+  animation: combatFloat 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.combat-text.critico { color: #6ee7b7; font-size: 2.4rem; }
+.combat-text.erro { color: #fda4af; font-size: 1.9rem; }
+.combat-text.alerta { color: #fde68a; font-size: 1.6rem; }
+
+@keyframes combatFloat {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(0.4); }
+  20% { opacity: 1; transform: translate(-50%, -25px) scale(1.25); }
+  75% { opacity: 1; transform: translate(-50%, -60px) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -90px) scale(0.85); }
+}
+
+@keyframes hintPulse {
+  0%, 100% { box-shadow: 0 4px 0 #c9ae72, 0 0 0 0 rgba(125, 211, 252, 0.7); }
+  50% { box-shadow: 0 4px 0 #c9ae72, 0 0 0 12px rgba(125, 211, 252, 0); }
+}
+
+/* ==========================================================================
+   ACESSIBILIDADE: MOVIMENTO REDUZIDO
+   O feedback continua existindo por ícone, cor e texto; só o movimento some.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .animate-screen-shake,
+  .animate-subtle-shake,
+  .animate-idle-bob,
+  .animate-idle-float,
+  .animate-hit,
+  .animate-wave,
+  .animate-pulse,
+  .tile--hint,
+  .socket--invalid {
+    animation: none !important;
+  }
+
+  .flash-overlay,
+  .shockwave-element {
+    display: none;
+  }
+
+  .combat-text {
+    animation: combatFade 1.4s ease-out forwards !important;
+  }
+
+  .btn-chunky,
+  .tile,
+  .socket {
+    transition: none;
+  }
+}
+
+@keyframes combatFade {
+  0%, 80% { opacity: 1; transform: translate(-50%, -30px); }
+  100% { opacity: 0; transform: translate(-50%, -30px); }
+}

@@ -1,0 +1,2305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Scassiotti Quest: O Resgate da Inclusão</title>
+  
+  <style>
+    /* ==========================================================================
+       1. DESIGN SYSTEM, TEMAS E VARIÁVEIS CSS (WCAG AAA & CYBER-ACADÊMICO)
+       ========================================================================== */
+    :root {
+      --bg-dark: #0a0f1d;
+      --bg-surface: #121a2f;
+      --bg-surface-elevated: #1a2540;
+      --bg-card: rgba(26, 38, 66, 0.9);
+      --border-subtle: rgba(255, 255, 255, 0.12);
+      --border-focus: #38bdf8;
+      
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-highlight: #38bdf8;
+      
+      /* Cores Semânticas Canônicas SVO */
+      --color-sujeito: #3b82f6;          /* Azul: Agente / Quem pratica a ação */
+      --color-sujeito-bg: rgba(59, 130, 246, 0.15);
+      --color-sujeito-border: #60a5fa;
+      
+      --color-verbo: #10b981;            /* Esmeralda: Ação do Verbo */
+      --color-verbo-bg: rgba(16, 185, 129, 0.15);
+      --color-verbo-border: #34d399;
+      
+      --color-objeto: #f59e0b;           /* Âmbar: Alvo / Objeto da Ação */
+      --color-objeto-bg: rgba(245, 158, 11, 0.15);
+      --color-objeto-border: #fbbf24;
+      
+      /* Feedback e Game Feel */
+      --color-critico: #10b981;
+      --color-erro: #ef4444;
+      --color-alerta: #eab308;
+      --color-purple: #a855f7;
+      
+      /* Tipografia e Raio */
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: 'Consolas', 'Courier New', Courier, monospace;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Modo de Alto Contraste para Máxima Acessibilidade (WCAG AAA) */
+    body.high-contrast {
+      --bg-dark: #000000;
+      --bg-surface: #0a0a0a;
+      --bg-surface-elevated: #171717;
+      --border-subtle: #ffffff;
+      --border-focus: #ffff00;
+      --text-main: #ffffff;
+      --text-muted: #dddddd;
+      --text-highlight: #00ffff;
+      --color-sujeito: #00bfff;
+      --color-verbo: #00ff66;
+      --color-objeto: #ffcc00;
+      --color-erro: #ff3333;
+    }
+
+    /* Reset Básico e Prevenção de Seleção de Texto no Arraste */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Grade Cibernética Dinâmica */
+    .cyber-grid-bg {
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 50% 10%, rgba(56, 189, 248, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 80% 85%, rgba(168, 85, 247, 0.08) 0%, transparent 60%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ==========================================================================
+       2. CAMADA DE IMPACTO E GAME FEEL VISUAL (DEAF-FIRST)
+       ========================================================================== */
+    /* Viewport com Tremor Sísmico de Tela (Trauma Shake com Rotação em Z) */
+    #game-viewport {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 16px;
+      position: relative;
+      z-index: 1;
+      transform-origin: center center;
+      transition: transform 0.04s ease-out;
+    }
+
+    .shake-trauma {
+      animation: traumaShakeZ 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+
+    .shake-subtle {
+      animation: subtleShakeX 0.3s ease-in-out both;
+    }
+
+    /* Tremor Sísmico com Rotação no Eixo Z */
+    @keyframes traumaShakeZ {
+      0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+      15% { transform: translate(-12px, 9px) rotate(-2.2deg) scale(1.02); }
+      30% { transform: translate(14px, -11px) rotate(1.8deg) scale(0.98); }
+      45% { transform: translate(-9px, 7px) rotate(-1.3deg); }
+      60% { transform: translate(7px, -6px) rotate(0.9deg); }
+      75% { transform: translate(-5px, 4px) rotate(-0.5deg); }
+      90% { transform: translate(3px, -2px) rotate(0.2deg); }
+      100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+    }
+
+    @keyframes subtleShakeX {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-7px); }
+      40%, 80% { transform: translateX(7px); }
+    }
+
+    /* Flash de Tela Cheia (Esmeralda para Crítico / Carmesim para Erro) */
+    #screen-flash {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.05s ease-out;
+    }
+
+    #screen-flash.flash-emerald {
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.5) 0%, rgba(16, 185, 129, 0.15) 75%);
+      opacity: 1;
+      animation: flashFade 0.45s ease-out forwards;
+    }
+
+    #screen-flash.flash-crimson {
+      background: radial-gradient(circle, rgba(239, 68, 68, 0.45) 0%, rgba(239, 68, 68, 0.12) 75%);
+      opacity: 1;
+      animation: flashFade 0.38s ease-out forwards;
+    }
+
+    @keyframes flashFade {
+      0% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    /* Onda de Choque Radial */
+    .shockwave {
+      position: fixed;
+      border-radius: 50%;
+      border: 4px solid #10b981;
+      box-shadow: 0 0 35px #10b981, inset 0 0 25px #10b981;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%) scale(0.1);
+      opacity: 1;
+      animation: shockwaveExpand 0.65s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+    }
+
+    @keyframes shockwaveExpand {
+      0% { transform: translate(-50%, -50%) scale(0.1); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(3.8); opacity: 0; }
+    }
+
+    /* Canvas de Partículas Luminosas */
+    #particles-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9990;
+    }
+
+    /* Texto Flutuante de Dano / Alerta */
+    .floating-text {
+      position: fixed;
+      z-index: 10000;
+      pointer-events: none;
+      font-weight: 900;
+      font-size: 1.8rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      transform: translate(-50%, -50%) scale(0.5);
+      animation: floatDamage 1.1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      text-shadow: 0 0 16px currentColor, 0 4px 10px rgba(0,0,0,0.8);
+    }
+
+    .floating-text.critico {
+      color: #34d399;
+      font-size: 2.3rem;
+    }
+
+    .floating-text.erro {
+      color: #f87171;
+      font-size: 1.6rem;
+    }
+
+    @keyframes floatDamage {
+      0% { opacity: 0; transform: translate(-50%, 0) scale(0.4); }
+      18% { opacity: 1; transform: translate(-50%, -30px) scale(1.3); }
+      70% { opacity: 1; transform: translate(-50%, -75px) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -110px) scale(0.85); }
+    }
+
+    /* ==========================================================================
+       3. CABEÇALHO & HUD ACADÊMICO
+       ========================================================================== */
+    header.game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-card);
+      backdrop-filter: blur(10px);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      width: 46px;
+      height: 46px;
+      background: linear-gradient(135deg, #3b82f6, #10b981);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+    }
+
+    .brand-info h1 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #38bdf8, #a7f3d0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.5px;
+    }
+
+    .brand-info p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 13px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-main);
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-badge:hover {
+      background: rgba(56, 189, 248, 0.18);
+      border-color: var(--border-focus);
+      transform: translateY(-1px);
+    }
+
+    /* Legenda Flutuante para Acessibilidade Sonora */
+    .sound-caption {
+      position: fixed;
+      bottom: 16px;
+      left: 18px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1.5px solid var(--border-focus);
+      color: var(--text-highlight);
+      padding: 7px 16px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.6);
+    }
+
+    .sound-caption.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ==========================================================================
+       4. ARENA DE BATALHA (HERÓI ACADÊMICO VS CHEFE SINTÁTICO)
+       ========================================================================== */
+    .battle-arena {
+      display: grid;
+      grid-template-columns: 1fr auto 1.35fr;
+      align-items: center;
+      gap: 18px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-card);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .battle-arena::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #3b82f6, #10b981, #f59e0b, #ef4444);
+    }
+
+    /* Lado do Jogador / Herói */
+    .character-side {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 10px;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 114px;
+      height: 114px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px dashed rgba(56, 189, 248, 0.45);
+      animation: rotateRing 14s linear infinite;
+    }
+
+    @keyframes rotateRing {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .hero-avatar {
+      width: 94px;
+      height: 94px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #1e293b, #0f172a);
+      border: 3px solid #38bdf8;
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .hero-avatar svg {
+      width: 62px;
+      height: 62px;
+    }
+
+    .hero-avatar.attacking {
+      animation: heroLunge 0.45s ease-out;
+    }
+
+    @keyframes heroLunge {
+      0% { transform: scale(1) translateX(0); }
+      40% { transform: scale(1.18) translateX(36px); }
+      100% { transform: scale(1) translateX(0); }
+    }
+
+    .character-label {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-title-badge {
+      font-size: 0.72rem;
+      background: rgba(56, 189, 248, 0.15);
+      color: #7dd3fc;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    /* Divisor VS */
+    .vs-badge {
+      font-size: 1.25rem;
+      font-weight: 900;
+      font-style: italic;
+      color: var(--text-muted);
+      background: var(--bg-surface-elevated);
+      width: 46px;
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+
+    /* Lado do Chefe / Monstro da Sintaxe */
+    .enemy-side {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .enemy-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .enemy-name {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #f87171;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .enemy-hp-text {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .hp-bar-container {
+      width: 100%;
+      height: 20px;
+      background: rgba(15, 23, 42, 0.85);
+      border-radius: var(--radius-full);
+      border: 1.5px solid rgba(239, 68, 68, 0.35);
+      padding: 2px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.7);
+    }
+
+    .hp-bar-fill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #ef4444, #f97316);
+      border-radius: var(--radius-full);
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.7);
+    }
+
+    .hp-bar-fill.hit {
+      animation: hpPulse 0.4s ease;
+    }
+
+    @keyframes hpPulse {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(2.5) drop-shadow(0 0 12px #ffffff); }
+    }
+
+    .enemy-body {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(15, 23, 42, 0.45);
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      border: 1px dashed rgba(239, 68, 68, 0.3);
+    }
+
+    .enemy-avatar {
+      width: 82px;
+      height: 82px;
+      border-radius: var(--radius-md);
+      background: radial-gradient(circle, #3b0764, #18052e);
+      border: 2px solid #c084fc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: 0 0 22px rgba(192, 132, 252, 0.35);
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .enemy-avatar svg {
+      width: 56px;
+      height: 56px;
+    }
+
+    .enemy-avatar.damaged {
+      animation: enemyHurt 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+
+    @keyframes enemyHurt {
+      0% { transform: scale(1) translate(0, 0); filter: brightness(1); }
+      20% { transform: scale(0.88) translate(16px, -6px); filter: brightness(3) drop-shadow(0 0 25px #ef4444); }
+      40% { transform: scale(1.06) translate(-12px, 8px); }
+      60% { transform: scale(0.96) translate(6px, -4px); }
+      80% { transform: scale(1.02) translate(-2px, 2px); }
+      100% { transform: scale(1) translate(0, 0); filter: brightness(1); }
+    }
+
+    .enemy-lore {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      flex: 1;
+    }
+
+    .enemy-lore strong {
+      color: #fca5a5;
+    }
+
+    /* ==========================================================================
+       5. CARD DE MEDIAÇÃO PEDAGÓGICA (GLOSA EM LIBRAS & CONTEXTO ACADÊMICO)
+       ========================================================================== */
+    .pedagogical-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 18px 22px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-card);
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .libras-gloss-box {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.95));
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      position: relative;
+    }
+
+    .gloss-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .gloss-tag {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .gloss-tokens {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .gloss-token {
+      background: rgba(56, 189, 248, 0.18);
+      color: #f0f9ff;
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-weight: 800;
+      font-size: 0.96rem;
+      letter-spacing: 0.5px;
+      font-family: var(--font-mono);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+
+    .gloss-arrow {
+      color: var(--text-muted);
+      font-size: 1.15rem;
+    }
+
+    .context-desc-box {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .context-desc-box .phase-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #f1f5f9;
+    }
+
+    .context-desc-box .goal-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #a7f3d0;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       6. ARENA SINTÁTICA: SLOTS SVO & FORJA DE ATAQUE
+       ========================================================================== */
+    .syntax-arena {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .arena-title-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .arena-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .formula-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      background: var(--bg-surface-elevated);
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .pill-s { color: var(--color-sujeito); font-weight: 800; }
+    .pill-v { color: var(--color-verbo); font-weight: 800; }
+    .pill-o { color: var(--color-objeto); font-weight: 800; }
+
+    /* Fileira de Slots / Sockets SVO */
+    .slots-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      width: 100%;
+    }
+
+    .syntax-socket {
+      min-height: 96px;
+      background: rgba(15, 23, 42, 0.65);
+      border: 2px dashed rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      position: relative;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: pointer;
+    }
+
+    .syntax-socket::before {
+      content: attr(data-slot-label);
+      position: absolute;
+      top: -11px;
+      left: 14px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      padding: 2px 10px;
+      border-radius: var(--radius-full);
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Cores Canônicas por Posição SVO */
+    .syntax-socket[data-index="0"] {
+      border-color: rgba(59, 130, 246, 0.35);
+    }
+    .syntax-socket[data-index="0"]::before {
+      color: var(--color-sujeito);
+      border-color: rgba(59, 130, 246, 0.5);
+    }
+    
+    .syntax-socket[data-index="1"] {
+      border-color: rgba(16, 185, 129, 0.35);
+    }
+    .syntax-socket[data-index="1"]::before {
+      color: var(--color-verbo);
+      border-color: rgba(16, 185, 129, 0.5);
+    }
+
+    .syntax-socket[data-index="2"] {
+      border-color: rgba(245, 158, 11, 0.35);
+    }
+    .syntax-socket[data-index="2"]::before {
+      color: var(--color-objeto);
+      border-color: rgba(245, 158, 11, 0.5);
+    }
+
+    .syntax-socket .slot-ghost-text {
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-align: center;
+      pointer-events: none;
+      padding: 4px;
+    }
+
+    /* Estados de Interação nos Sockets */
+    .syntax-socket.drag-over {
+      background: rgba(56, 189, 248, 0.22);
+      border-color: var(--border-focus);
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.55), inset 0 0 15px rgba(56, 189, 248, 0.2);
+      transform: scale(1.04);
+    }
+
+    .syntax-socket.occupied {
+      border-style: solid;
+      border-color: rgba(255, 255, 255, 0.28);
+      background: rgba(15, 23, 42, 0.35);
+    }
+
+    /* ==========================================================================
+       7. BANCO DE PALAVRAS (RESERVA) E CARTAS DE PALAVRA
+       ========================================================================== */
+    .reserve-section {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .reserve-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .reserve-cards-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      min-height: 84px;
+      padding: 14px;
+      background: rgba(15, 23, 42, 0.55);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Estilização da Carta de Palavra Física */
+    .word-card {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1.5px solid rgba(255, 255, 255, 0.18);
+      color: var(--text-main);
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      font-size: 0.98rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      cursor: grab;
+      touch-action: none; /* Essencial para Pointer Events responsivos */
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+      transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.15s ease, border-color 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
+
+    .word-card:hover {
+      border-color: #38bdf8;
+      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .word-card:active {
+      cursor: grabbing;
+    }
+
+    /* Animação Elástica de Encaixe (Punch Scale Bounce) */
+    .word-card.punch-bounce {
+      animation: punchScaleBounce 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes punchScaleBounce {
+      0% { transform: scale(0.65); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+
+    /* Placeholder enquanto a carta é arrastada */
+    .word-card.drag-placeholder {
+      opacity: 0.3;
+      border: 2px dashed rgba(255, 255, 255, 0.4);
+      background: transparent;
+      box-shadow: none;
+    }
+
+    /* Elemento Fantasma Flutuante durante o Arraste (Ultra-suave) */
+    #drag-ghost {
+      position: fixed;
+      pointer-events: none;
+      z-index: 10000;
+      opacity: 0.95;
+      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(56, 189, 248, 0.6);
+      border: 2px solid #38bdf8;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      font-size: 0.98rem;
+      font-weight: 700;
+      display: none;
+      transform: translate3d(0, 0, 0) rotate(3deg) scale(1.08);
+      transform-origin: center center;
+    }
+
+    /* ==========================================================================
+       8. BARRA DE COMANDOS DE BATALHA
+       ========================================================================== */
+    .battle-actions-bar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .btn-secondary {
+      background: var(--bg-surface-elevated);
+      color: var(--text-muted);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--text-main);
+    }
+
+    .btn-attack {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      box-shadow: 0 4px 18px rgba(16, 185, 129, 0.45);
+      position: relative;
+    }
+
+    .btn-attack:hover:not(:disabled) {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 28px rgba(16, 185, 129, 0.65);
+    }
+
+    .btn-attack:disabled {
+      background: #334155;
+      color: #64748b;
+      box-shadow: none;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .btn-attack.ready-pulse {
+      animation: readyAttackPulse 1.8s infinite;
+    }
+
+    @keyframes readyAttackPulse {
+      0%, 100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+      50% { box-shadow: 0 0 32px rgba(16, 185, 129, 0.8), 0 0 45px rgba(56, 189, 248, 0.45); }
+    }
+
+    /* ==========================================================================
+       9. BANNER DE FEEDBACK VISUAL & DICAS PEDAGÓGICAS (KRASHEN)
+       ========================================================================== */
+    .feedback-banner {
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      display: none;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-card);
+      animation: bannerSlideDown 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes bannerSlideDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .feedback-banner.show {
+      display: flex;
+    }
+
+    .feedback-banner.warning {
+      background: rgba(234, 179, 8, 0.14);
+      border: 1.5px solid #eab308;
+      color: #fef08a;
+    }
+
+    .feedback-banner.error {
+      background: rgba(239, 68, 68, 0.14);
+      border: 1.5px solid #ef4444;
+      color: #fecaca;
+    }
+
+    .feedback-banner.success {
+      background: rgba(16, 185, 129, 0.14);
+      border: 1.5px solid #10b981;
+      color: #a7f3d0;
+    }
+
+    .feedback-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .feedback-content {
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .feedback-content strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.96rem;
+    }
+
+    /* ==========================================================================
+       10. MODAIS: FUNDAMENTAÇÃO TEÓRICA E VITÓRIA FINAL
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 15, 29, 0.88);
+      backdrop-filter: blur(8px);
+      z-index: 20000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      animation: modalFadeIn 0.25s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 720px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 26px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 14px;
+    }
+
+    .modal-header h2 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #38bdf8;
+    }
+
+    .btn-close-modal {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.6rem;
+      cursor: pointer;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s ease;
+    }
+
+    .btn-close-modal:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--text-main);
+    }
+
+    .modal-body {
+      font-size: 0.92rem;
+      line-height: 1.65;
+      color: #cbd5e1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .pedagogical-callout {
+      background: rgba(56, 189, 248, 0.08);
+      border-left: 4px solid #38bdf8;
+      padding: 14px 18px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+
+    .victory-badge {
+      text-align: center;
+      padding: 16px 0;
+    }
+
+    .victory-badge .crown-icon {
+      font-size: 3.8rem;
+      filter: drop-shadow(0 0 22px #eab308);
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+
+    /* ==========================================================================
+       11. RESPONSIVIDADE E ACESSIBILIDADE DE TELA (MOBILE / TABLET / DESKTOP)
+       ========================================================================== */
+    @media (max-width: 768px) {
+      #game-viewport {
+        padding: 10px;
+      }
+
+      .battle-arena {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        text-align: center;
+      }
+
+      .character-side {
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      .vs-badge {
+        display: none;
+      }
+
+      .pedagogical-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .slots-container {
+        gap: 10px;
+      }
+
+      .syntax-socket {
+        min-height: 84px;
+        padding: 6px;
+      }
+
+      .word-card {
+        padding: 10px 14px;
+        font-size: 0.88rem;
+      }
+
+      .btn-action {
+        width: 100%;
+      }
+
+      .battle-actions-bar {
+        flex-direction: column-reverse;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Fundo Cibernético -->
+  <div class="cyber-grid-bg"></div>
+
+  <!-- Camadas Visuais de Feedback Deaf-First -->
+  <div id="screen-flash"></div>
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Elemento Fantasma para Arraste Suave de Alta Performance -->
+  <div id="drag-ghost"></div>
+
+  <!-- Legenda Flutuante para Acessibilidade Sonora -->
+  <div id="sound-caption" class="sound-caption" aria-live="polite">
+    <span>🔊</span>
+    <span id="sound-caption-text">Efeito Sonoro Acionado</span>
+  </div>
+
+  <!-- Container Principal do Jogo com Tremor Sísmico -->
+  <main id="game-viewport">
+    
+    <!-- Topo / Cabeçalho HUD -->
+    <header class="game-header">
+      <div class="brand-group">
+        <div class="brand-icon">⚔️</div>
+        <div class="brand-info">
+          <h1>Scassiotti Quest</h1>
+          <p>O Resgate da Inclusão • Seminários III (Ciência da Computação)</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="btn-contrast-toggle" class="btn-badge" title="Alternar Modo de Alto Contraste (WCAG AAA)">
+          <span>👁️</span>
+          <span>Alto Contraste</span>
+        </button>
+        <button id="btn-theory" class="btn-badge" title="Fundamentação Teórica e Gramática SVO">
+          <span>📚</span>
+          <span>Fundamentação</span>
+        </button>
+        <button id="btn-audio-toggle" class="btn-badge" title="Alternar Efeitos Sonoros com Legenda Visual">
+          <span id="audio-icon">🔇</span>
+          <span id="audio-label">Áudio Opcional</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Arena de Batalha (Herói Acadêmico vs Monstro da Sintaxe) -->
+    <section class="battle-arena" aria-label="Arena de Batalha">
+      <!-- Lado do Jogador -->
+      <div class="character-side">
+        <div class="avatar-wrapper">
+          <div class="avatar-ring"></div>
+          <div class="hero-avatar" id="hero-avatar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+        </div>
+        <div class="character-label">
+          <span>Dev Acadêmico</span>
+          <span class="hero-title-badge">Nível SVO</span>
+        </div>
+      </div>
+
+      <!-- Divisor Estilizado VS -->
+      <div class="vs-badge">VS</div>
+
+      <!-- Lado do Inimigo / Chefe Pedagógico -->
+      <div class="enemy-side">
+        <div class="enemy-header">
+          <div class="enemy-name" id="enemy-name">
+            <span>👾</span>
+            <span id="enemy-name-text">Barreira da Insegurança</span>
+          </div>
+          <div class="enemy-hp-text">
+            HP: <span id="enemy-current-hp">100</span> / <span id="enemy-max-hp">100</span>
+          </div>
+        </div>
+
+        <!-- Barra de Vida do Inimigo -->
+        <div class="hp-bar-container">
+          <div class="hp-bar-fill" id="hp-bar-fill" style="width: 100%;"></div>
+        </div>
+
+        <div class="enemy-body">
+          <div class="enemy-avatar" id="enemy-avatar">
+            <svg id="enemy-svg" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 19l2.5 2.5L17 19l3 3V10a8 8 0 0 0-8-8z"/>
+              <line x1="9" y1="10" x2="9.01" y2="10"/>
+              <line x1="15" y1="10" x2="15.01" y2="10"/>
+            </svg>
+          </div>
+          <div class="enemy-lore" id="enemy-lore">
+            O medo de errar a sintaxe formal e a ansiedade acadêmica gerada pelo estigma linguístico. Forje a ordem canônica SVO para desintegrá-lo!
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Card de Mediação Pedagógica (Libras L1 & Contexto L2) -->
+    <section class="pedagogical-panel" aria-label="Mediação Linguística">
+      <div class="libras-gloss-box">
+        <div class="gloss-header">
+          <span class="gloss-tag">
+            <span>🤟</span>
+            <span>Glosa em Libras (L1 - Tópico-Comentário)</span>
+          </span>
+          <span style="font-size: 0.72rem; color: var(--text-muted);">Processamento Visual-Espacial</span>
+        </div>
+        <div class="gloss-tokens" id="libras-tokens">
+          <span class="gloss-token">COORDENADORA</span>
+          <span class="gloss-arrow">➔</span>
+          <span class="gloss-token">AJUDAR</span>
+          <span class="gloss-arrow">➔</span>
+          <span class="gloss-token">ALUNO</span>
+        </div>
+      </div>
+
+      <div class="context-desc-box">
+        <span class="phase-title" id="phase-title">Fase 1: Estrutura Básica SVO</span>
+        <span class="goal-badge">
+          <span>🎯</span>
+          <span id="pedagogical-goal">Ordem canônica: Sujeito + Verbo + Objeto</span>
+        </span>
+        <p id="context-text" style="color: #94a3b8; font-size: 0.85rem;">
+          A coordenadora acadêmica acolhe o estudante com apoio pedagógico.
+        </p>
+      </div>
+    </section>
+
+    <!-- Banner Dinâmico de Feedback Pedagógico (Krashen - Redução de Filtro Afetivo) -->
+    <div id="feedback-banner" class="feedback-banner" role="alert">
+      <div class="feedback-icon" id="feedback-icon">💡</div>
+      <div class="feedback-content" id="feedback-content">
+        <strong id="feedback-title">Dica Sintática:</strong>
+        <span id="feedback-text">A ordem em português exige Sujeito antes do Verbo.</span>
+      </div>
+    </div>
+
+    <!-- Forja Sintática: Slots SVO -->
+    <section class="syntax-arena" aria-label="Construção da Frase">
+      <div class="arena-title-bar">
+        <div class="arena-title">
+          <span>⚡</span>
+          <span>Forja Sintática Linear (Português L2)</span>
+        </div>
+        <div class="formula-badge">
+          <span class="pill-s">1º Sujeito</span> + 
+          <span class="pill-v">2º Verbo</span> + 
+          <span class="pill-o">3º Objeto</span>
+        </div>
+      </div>
+
+      <!-- Fileira dos 3 Sockets -->
+      <div class="slots-container" id="slots-container">
+        <!-- Socket 0: Sujeito -->
+        <div class="syntax-socket" data-index="0" data-slot-label="1º Sujeito (Quem?)" id="socket-0">
+          <span class="slot-ghost-text">Arraste ou clique no Sujeito</span>
+        </div>
+        <!-- Socket 1: Verbo -->
+        <div class="syntax-socket" data-index="1" data-slot-label="2º Verbo (Ação)" id="socket-1">
+          <span class="slot-ghost-text">Arraste ou clique no Verbo</span>
+        </div>
+        <!-- Socket 2: Objeto -->
+        <div class="syntax-socket" data-index="2" data-slot-label="3º Objeto (Alvo)" id="socket-2">
+          <span class="slot-ghost-text">Arraste ou clique no Objeto</span>
+        </div>
+      </div>
+
+      <!-- Banco de Palavras (Reserva) -->
+      <div class="reserve-section">
+        <div class="reserve-label">
+          <span>📦</span>
+          <span>Banco de Termos Disponíveis (Toque para equipar ou arraste)</span>
+        </div>
+        <div class="reserve-cards-container" id="reserve-container">
+          <!-- Cartas inseridas dinamicamente via JS -->
+        </div>
+      </div>
+
+      <!-- Barra de Ações de Batalha -->
+      <div class="battle-actions-bar">
+        <button id="btn-show-hint" class="btn-action btn-secondary" title="Ver Dica Pedagógica da Fase">
+          <span>💡</span>
+          <span>Dica Sintática</span>
+        </button>
+        <button id="btn-reset-slots" class="btn-action btn-secondary" title="Retornar todas as palavras para a reserva">
+          <span>🔄</span>
+          <span>Limpar Slots</span>
+        </button>
+        <button id="btn-attack" class="btn-action btn-attack" title="Executar o ataque gramatical no monstro">
+          <span>💥</span>
+          <span>Desferir Golpe Sintático</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal de Fundamentação Teórica (Seminários III) -->
+  <div id="modal-theory" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Fundamentação Teórica & Metodologia IHC</h2>
+        <button id="btn-close-theory" class="btn-close-modal" aria-label="Fechar modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="pedagogical-callout">
+          <strong>Contexto Acadêmico:</strong> Seminários III - Ciência da Computação<br>
+          <strong>Objetivo Central:</strong> Superação de barreiras de acessibilidade, permanência e alfabetização funcional de estudantes surdos no Ensino Superior.
+        </div>
+        
+        <h3>1. A Realidade Linguística: L1 vs. L2</h3>
+        <p>
+          A Língua Brasileira de Sinais (<strong>Libras</strong> - Lei Federal 10.436/2002) é a <strong>L1 (Primeira Língua)</strong> da pessoa surda. Por ter modalidade visual-espacial, sua estrutura sintática opera predominantemente pelo modelo <em>Tópico-Comentário</em>, com marcadores espaciais e economia de conectivos isolados.
+        </p>
+        <p>
+          O <strong>Português Escrito</strong> é processado como <strong>L2 (Segunda Língua)</strong>, exigindo a linearidade canônica estrita <strong>SVO (Sujeito + Verbo + Objeto)</strong> e regras morfológicas complexas de concordância, sem apoio de memória fonológica ou ritmo oral-auditivo.
+        </p>
+
+        <h3>2. Redução do Filtro Afetivo (Krashen)</h3>
+        <p>
+          De acordo com a Hipótese do Filtro Afetivo de Stephen Krashen, o medo de errar e o estigma acadêmico bloqueiam a aquisição linguística. Este jogo gamifica a sintaxe: o erro não pune com redução punitiva de vidas, mas sim oferece <strong>feedback visual pedagógico imediato</strong> para que o estudante compreenda a lógica da estrutura linear canônica.
+        </p>
+
+        <h3>3. Filosofia Deaf-First (Não-Auditiva) e Game Feel</h3>
+        <p>
+          O jogo adota princípios estritos de IHC Não-Auditiva: todas as informações são comunicadas por estímulos táteis e visuais de alto impacto (hit-stop de 0.06s, screen trauma shake com rotação em Z, flashes cromáticos, ondas de choque radiais e número flutuante elástico). O áudio é estritamente opcional e acompanhado de legendas visuais.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Vitória Final -->
+  <div id="modal-victory" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-card" style="text-align: center;">
+      <div class="victory-badge">
+        <div class="crown-icon">🏆</div>
+        <h2 style="font-size: 1.6rem; color: #34d399; margin-bottom: 8px;">Resgate da Inclusão Concluído!</h2>
+        <p style="color: var(--text-muted);">Você superou a Barreira da Insegurança e depurou o Bug da Complexidade.</p>
+      </div>
+
+      <div class="modal-body" style="text-align: left;">
+        <div class="pedagogical-callout" style="border-left-color: #10b981; background: rgba(16, 185, 129, 0.08);">
+          <strong>Certificado de Conquista Acadêmica:</strong><br>
+          Você demonstrou domínio pleno da ordem canônica <strong>Sujeito + Verbo + Objeto (SVO)</strong> e da concordância nominal/verbal no contexto do Ensino Superior.
+        </div>
+        <p style="text-align: center; font-size: 0.95rem; color: #f1f5f9;">
+          "A verdadeira inclusão não adapta o indivíduo à barreira; ela transforma a tecnologia para derrubar a barreira."
+        </p>
+      </div>
+
+      <div style="margin-top: 16px; display: flex; justify-content: center; gap: 12px;">
+        <button id="btn-restart-game" class="btn-action btn-attack" style="width: auto; padding: 12px 30px;">
+          <span>🔁</span>
+          <span>Jogar Novamente</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       12. LÓGICA JAVASCRIPT MODERNA, EMBUTIDA E AUTOSSUFICIENTE
+       ========================================================================== */ -->
+  <script>
+    'use strict';
+
+    /* ==========================================================================
+       A. DATASET EMBUTIDO CONFORME ESPECIFICAÇÃO
+       ========================================================================== */
+    const GAME_DATA = {
+      levels: [
+        {
+          id: 1,
+          title: "Fase 1: Estrutura Básica SVO",
+          pedagogicalGoal: "Ordem canônica: Sujeito + Verbo + Objeto",
+          enemy: {
+            name: "Barreira da Insegurança",
+            maxHp: 100,
+            type: "inseguranca",
+            lore: "O medo de errar a sintaxe formal e a ansiedade acadêmica gerada pelo estigma linguístico. Forje a ordem canônica SVO para destruí-la!"
+          },
+          media: {
+            librasGloss: "COORDENADORA AJUDAR ALUNO",
+            context: "A coordenadora acadêmica acolhe o estudante com apoio pedagógico."
+          },
+          syntaxChallenge: {
+            correctOrder: ["A coordenadora", "ajuda", "o estudante"],
+            scrambledWords: ["o estudante", "A coordenadora", "ajuda"],
+            distractors: ["estudaram"]
+          },
+          feedback: {
+            tip: "Em português formal: 1º Quem pratica a ação (Sujeito), 2º A ação (Verbo), 3º Quem recebe a ação (Objeto)."
+          }
+        },
+        {
+          id: 2,
+          title: "Fase 2: Concordância e Plural",
+          pedagogicalGoal: "Concordância Verbal no Plural e Adjetivação",
+          enemy: {
+            name: "Bug da Complexidade",
+            maxHp: 100,
+            type: "bug",
+            lore: "Erros de concordância de plural e adjetivos técnicos da computação tentam gerar falhas de sintaxe. Aplique o plural correto!"
+          },
+          media: {
+            librasGloss: "ALUNO-PLURAL CRIAR JOGO ACESSÍVEL",
+            context: "Os estudantes de Ciência da Computação desenvolvem softwares inclusivos."
+          },
+          syntaxChallenge: {
+            correctOrder: ["Os alunos", "criam", "jogos acessíveis"],
+            scrambledWords: ["jogos acessíveis", "Os alunos", "criam"],
+            distractors: ["cria"]
+          },
+          feedback: {
+            tip: "Atenção à concordância: o sujeito no plural ('Os alunos') exige o verbo no plural ('criam')."
+          }
+        }
+      ]
+    };
+
+    /* ==========================================================================
+       B. SISTEMA DE ÁUDIO OPCIONAL COM LEGENDA VISUAL (WEB AUDIO API)
+       ========================================================================== */
+    class VisualAudioManager {
+      constructor() {
+        this.ctx = null;
+        this.enabled = false;
+        this.captionEl = document.getElementById('sound-caption');
+        this.captionTextEl = document.getElementById('sound-caption-text');
+        this.captionTimeout = null;
+      }
+
+      init() {
+        if (!this.ctx && (window.AudioContext || window.webkitAudioContext)) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioCtx();
+        }
+      }
+
+      toggle() {
+        this.enabled = !this.enabled;
+        if (this.enabled) {
+          this.init();
+          if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume();
+          }
+          this.showCaption("Áudio Auxiliar Ativado (com legendas visuais)");
+        } else {
+          this.showCaption("Áudio Desativado (Modo 100% Visual Deaf-First)");
+        }
+        return this.enabled;
+      }
+
+      showCaption(text) {
+        if (!this.captionEl || !this.captionTextEl) return;
+        this.captionTextEl.textContent = text;
+        this.captionEl.classList.add('active');
+        clearTimeout(this.captionTimeout);
+        this.captionTimeout = setTimeout(() => {
+          this.captionEl.classList.remove('active');
+        }, 2200);
+      }
+
+      playHit() {
+        this.showCaption("[💥 IMPACTO CRÍTICO SÍSMICO]");
+        if (!this.enabled || !this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(140, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(30, this.ctx.currentTime + 0.35);
+          gain.gain.setValueAtTime(0.5, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.35);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.35);
+        } catch (e) {}
+      }
+
+      playSnap() {
+        this.showCaption("[🧩 ENCAIXE DE TERMO NO SOCKET]");
+        if (!this.enabled || !this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(880, this.ctx.currentTime + 0.08);
+          gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.08);
+        } catch (e) {}
+      }
+
+      playError() {
+        this.showCaption("[⚠️ ALERTA DE ORDEM SINTÁTICA]");
+        if (!this.enabled || !this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(180, this.ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(110, this.ctx.currentTime + 0.25);
+          gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.25);
+        } catch (e) {}
+      }
+
+      playVictory() {
+        this.showCaption("[✨ FANFARRA DA INCLUSÃO]");
+        if (!this.enabled || !this.ctx) return;
+        const notes = [523.25, 659.25, 783.99, 1046.5];
+        notes.forEach((freq, idx) => {
+          setTimeout(() => {
+            try {
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              osc.type = 'triangle';
+              osc.frequency.value = freq;
+              gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+              gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.4);
+              osc.connect(gain);
+              gain.connect(this.ctx.destination);
+              osc.start();
+              osc.stop(this.ctx.currentTime + 0.4);
+            } catch (e) {}
+          }, idx * 120);
+        });
+      }
+    }
+
+    /* ==========================================================================
+       C. MOTOR DE PARTÍCULAS VISUAIS EM CANVAS
+       ========================================================================== */
+    class ParticleEngine {
+      constructor() {
+        this.canvas = document.getElementById('particles-canvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.particles = [];
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+        this.loop = this.loop.bind(this);
+        requestAnimationFrame(this.loop);
+      }
+
+      resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+      }
+
+      burst(x, y, count = 35, colorHex = '#10b981') {
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 3 + Math.random() * 9;
+          this.particles.push({
+            x,
+            y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            radius: 3 + Math.random() * 5,
+            color: colorHex,
+            alpha: 1,
+            decay: 0.015 + Math.random() * 0.02,
+            gravity: 0.18
+          });
+        }
+      }
+
+      loop() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+          const p = this.particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += p.gravity;
+          p.vx *= 0.98;
+          p.alpha -= p.decay;
+
+          if (p.alpha <= 0) {
+            this.particles.splice(i, 1);
+            continue;
+          }
+
+          this.ctx.save();
+          this.ctx.globalAlpha = p.alpha;
+          this.ctx.fillStyle = p.color;
+          this.ctx.shadowBlur = 10;
+          this.ctx.shadowColor = p.color;
+          this.ctx.beginPath();
+          this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.restore();
+        }
+        requestAnimationFrame(this.loop);
+      }
+    }
+
+    /* ==========================================================================
+       D. GERENCIADOR DO JOGO (GAME CONTROLLER & SISTEMA DE INTERAÇÃO IHC)
+       ========================================================================== */
+    class ScassiottiQuestGame {
+      constructor() {
+        this.data = GAME_DATA;
+        this.currentLevelIndex = 0;
+        this.enemyCurrentHp = 100;
+        this.equippedWords = [null, null, null]; // 3 sockets SVO
+        this.reserveWords = [];
+        this.isLocked = false;
+        this.suppressClick = false; // Previne clique indesejado logo após arrastar
+
+        // Módulos Auxiliares
+        this.audio = new VisualAudioManager();
+        this.particles = new ParticleEngine();
+
+        // Elementos DOM
+        this.viewport = document.getElementById('game-viewport');
+        this.screenFlash = document.getElementById('screen-flash');
+        this.dragGhost = document.getElementById('drag-ghost');
+        
+        this.enemyHpFill = document.getElementById('hp-bar-fill');
+        this.enemyCurrentHpEl = document.getElementById('enemy-current-hp');
+        this.enemyMaxHpEl = document.getElementById('enemy-max-hp');
+        this.enemyNameEl = document.getElementById('enemy-name-text');
+        this.enemyLoreEl = document.getElementById('enemy-lore');
+        this.enemyAvatar = document.getElementById('enemy-avatar');
+        this.heroAvatar = document.getElementById('hero-avatar');
+        
+        this.phaseTitleEl = document.getElementById('phase-title');
+        this.pedagogicalGoalEl = document.getElementById('pedagogical-goal');
+        this.contextTextEl = document.getElementById('context-text');
+        this.librasTokensEl = document.getElementById('libras-tokens');
+
+        this.socketsContainer = document.getElementById('slots-container');
+        this.socketElements = [
+          document.getElementById('socket-0'),
+          document.getElementById('socket-1'),
+          document.getElementById('socket-2')
+        ];
+        this.reserveContainer = document.getElementById('reserve-container');
+        this.btnAttack = document.getElementById('btn-attack');
+        this.btnResetSlots = document.getElementById('btn-reset-slots');
+        this.btnShowHint = document.getElementById('btn-show-hint');
+
+        this.feedbackBanner = document.getElementById('feedback-banner');
+        this.feedbackTitle = document.getElementById('feedback-title');
+        this.feedbackText = document.getElementById('feedback-text');
+        this.feedbackIcon = document.getElementById('feedback-icon');
+
+        // Modais e Controles
+        this.modalTheory = document.getElementById('modal-theory');
+        this.modalVictory = document.getElementById('modal-victory');
+        this.btnTheory = document.getElementById('btn-theory');
+        this.btnCloseTheory = document.getElementById('btn-close-theory');
+        this.btnRestart = document.getElementById('btn-restart-game');
+        this.btnAudioToggle = document.getElementById('btn-audio-toggle');
+        this.audioIcon = document.getElementById('audio-icon');
+        this.btnContrastToggle = document.getElementById('btn-contrast-toggle');
+
+        // Estado do Arraste
+        this.activeDrag = null;
+
+        this.initEventListeners();
+        this.loadLevel(0);
+      }
+
+      /* Inicialização de Ouvintes de Eventos Globais */
+      initEventListeners() {
+        this.btnAttack.addEventListener('click', () => this.handleAttack());
+        this.btnResetSlots.addEventListener('click', () => this.unequipAll());
+        this.btnShowHint.addEventListener('click', () => {
+          const level = this.data.levels[this.currentLevelIndex];
+          this.showFeedback('warning', 'Dica Sintática da Fase', level.feedback.tip);
+        });
+
+        // Alternância de Alto Contraste
+        this.btnContrastToggle.addEventListener('click', () => {
+          document.body.classList.toggle('high-contrast');
+        });
+
+        // Modais
+        this.btnTheory.addEventListener('click', () => this.modalTheory.classList.add('active'));
+        this.btnCloseTheory.addEventListener('click', () => this.modalTheory.classList.remove('active'));
+        this.modalTheory.addEventListener('click', (e) => {
+          if (e.target === this.modalTheory) this.modalTheory.classList.remove('active');
+        });
+
+        this.btnRestart.addEventListener('click', () => {
+          this.modalVictory.classList.remove('active');
+          this.loadLevel(0);
+        });
+
+        // Alternância de Áudio
+        this.btnAudioToggle.addEventListener('click', () => {
+          const isEnabled = this.audio.toggle();
+          this.audioIcon.textContent = isEnabled ? '🔊' : '🔇';
+        });
+
+        // Ouvinte de clique nos Sockets (Desequipar direto no socket)
+        this.socketElements.forEach((socketEl, idx) => {
+          socketEl.addEventListener('click', (e) => {
+            if (this.suppressClick) return;
+            if (this.equippedWords[idx] !== null) {
+              this.unequipWord(idx);
+            }
+          });
+        });
+
+        // Ouvintes Globais para Pointer Events (Arraste sem falhas em Mouse e Touch)
+        window.addEventListener('pointermove', (e) => this.handlePointerMove(e));
+        window.addEventListener('pointerup', (e) => this.handlePointerUp(e));
+        window.addEventListener('pointercancel', (e) => this.handlePointerUp(e));
+      }
+
+      /* Carregar Nível Baseado no Dataset */
+      loadLevel(index) {
+        this.currentLevelIndex = index;
+        const level = this.data.levels[index];
+        this.enemyCurrentHp = level.enemy.maxHp;
+        this.equippedWords = [null, null, null];
+        this.hideFeedback();
+
+        // Atualizar Informações da Fase e Chefe
+        this.phaseTitleEl.textContent = level.title;
+        this.pedagogicalGoalEl.textContent = level.pedagogicalGoal;
+        this.contextTextEl.textContent = level.media.context;
+        this.enemyNameEl.textContent = level.enemy.name;
+        this.enemyLoreEl.innerHTML = `<strong>${level.enemy.name}:</strong> ${level.enemy.lore}`;
+        this.updateEnemyHpDisplay();
+
+        // Ícone Diferenciado do Chefe
+        const enemySvg = document.getElementById('enemy-svg');
+        if (level.enemy.type === 'bug') {
+          enemySvg.innerHTML = `
+            <circle cx="12" cy="12" r="5" stroke="#ef4444" stroke-width="2"/>
+            <path d="M12 2v5M12 17v5M5 6l3 3M16 15l3 3M2 12h5M17 12h5M5 18l3-3M16 9l3-3" stroke="#f87171" stroke-width="1.8"/>
+          `;
+        } else {
+          enemySvg.innerHTML = `
+            <path d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 19l2.5 2.5L17 19l3 3V10a8 8 0 0 0-8-8z" stroke="#c084fc" stroke-width="1.8"/>
+            <line x1="9" y1="10" x2="9.01" y2="10" stroke="#c084fc" stroke-width="2"/>
+            <line x1="15" y1="10" x2="15.01" y2="10" stroke="#c084fc" stroke-width="2"/>
+          `;
+        }
+
+        // Atualizar Glosa em Libras
+        const glossWords = level.media.librasGloss.split(' ');
+        this.librasTokensEl.innerHTML = glossWords.map((word, i) => `
+          <span class="gloss-token">${word}</span>
+          ${i < glossWords.length - 1 ? '<span class="gloss-arrow">➔</span>' : ''}
+        `).join('');
+
+        // Montar Palavras da Reserva (Scrambled + Distractor embaralhados)
+        const allWords = [...level.syntaxChallenge.scrambledWords, ...level.syntaxChallenge.distractors];
+        this.reserveWords = allWords.sort(() => Math.random() - 0.5);
+
+        this.renderSockets();
+        this.renderReserve();
+        this.updateAttackButtonState();
+      }
+
+      /* Renderizar Sockets SVO */
+      renderSockets() {
+        this.socketElements.forEach((socketEl, idx) => {
+          const word = this.equippedWords[idx];
+          socketEl.innerHTML = '';
+
+          if (word) {
+            socketEl.classList.add('occupied');
+            const cardEl = this.createCardElement(word, 'socket', idx);
+            socketEl.appendChild(cardEl);
+          } else {
+            socketEl.classList.remove('occupied');
+            const ghostText = document.createElement('span');
+            ghostText.className = 'slot-ghost-text';
+            const labels = ['Arraste ou clique no Sujeito', 'Arraste ou clique no Verbo', 'Arraste ou clique no Objeto'];
+            ghostText.textContent = labels[idx];
+            socketEl.appendChild(ghostText);
+          }
+        });
+      }
+
+      /* Renderizar Banco de Palavras (Reserva) */
+      renderReserve() {
+        this.reserveContainer.innerHTML = '';
+        if (this.reserveWords.length === 0) {
+          this.reserveContainer.innerHTML = '<span style="color: var(--text-muted); font-size: 0.88rem; font-style: italic;">Todos os termos estão posicionados nos slots!</span>';
+          return;
+        }
+
+        this.reserveWords.forEach((word, idx) => {
+          const cardEl = this.createCardElement(word, 'reserve', idx);
+          this.reserveContainer.appendChild(cardEl);
+        });
+      }
+
+      /* Criação do Elemento Card com Pointer Events e Tap-to-Equip */
+      createCardElement(word, location, index) {
+        const card = document.createElement('div');
+        card.className = 'word-card punch-bounce';
+        card.setAttribute('data-word', word);
+        card.setAttribute('data-location', location);
+        card.setAttribute('data-index', index);
+
+        const icon = document.createElement('span');
+        icon.className = 'word-icon';
+        icon.textContent = '📄';
+
+        const label = document.createElement('span');
+        label.textContent = word;
+
+        card.appendChild(icon);
+        card.appendChild(label);
+
+        // Sistema 1: Tap-to-Equip / Unequip com 1 Clique
+        card.addEventListener('click', (e) => {
+          if (this.suppressClick) {
+            e.stopPropagation();
+            return;
+          }
+          e.stopPropagation();
+
+          if (location === 'reserve') {
+            this.equipWord(word, index);
+          } else if (location === 'socket') {
+            this.unequipWord(index);
+          }
+        });
+
+        // Sistema 2: Arraste com Proximidade Magnética (<120px) via Pointer Events
+        card.addEventListener('pointerdown', (e) => {
+          if (e.button !== 0 && e.pointerType === 'mouse') return;
+          this.startDrag(e, card, word, location, index);
+        });
+
+        return card;
+      }
+
+      /* ==========================================================================
+         E. SISTEMA 1: TAP-TO-EQUIP / UNEQUIP (1 CLIQUE)
+         ========================================================================== */
+      equipWord(word, reserveIndex, targetSlot = null) {
+        let emptySlot = targetSlot !== null ? targetSlot : this.equippedWords.indexOf(null);
+
+        if (emptySlot === -1) {
+          this.showFeedback('warning', 'Slots Cheios!', 'Clique em um termo já posicionado para devolvê-lo à reserva.');
+          return;
+        }
+
+        if (this.equippedWords[emptySlot] !== null) {
+          this.reserveWords.push(this.equippedWords[emptySlot]);
+        }
+
+        this.equippedWords[emptySlot] = word;
+        this.reserveWords.splice(reserveIndex, 1);
+
+        this.audio.playSnap();
+        this.renderSockets();
+        this.renderReserve();
+        this.updateAttackButtonState();
+      }
+
+      unequipWord(socketIndex) {
+        const word = this.equippedWords[socketIndex];
+        if (!word) return;
+
+        this.equippedWords[socketIndex] = null;
+        this.reserveWords.push(word);
+
+        this.audio.playSnap();
+        this.renderSockets();
+        this.renderReserve();
+        this.updateAttackButtonState();
+      }
+
+      unequipAll() {
+        this.equippedWords.forEach((word, idx) => {
+          if (word) {
+            this.reserveWords.push(word);
+            this.equippedWords[idx] = null;
+          }
+        });
+        this.audio.playSnap();
+        this.renderSockets();
+        this.renderReserve();
+        this.updateAttackButtonState();
+      }
+
+      /* ==========================================================================
+         F. SISTEMA 2: ARRASTE E SOLTE COM PROXIMIDADE (<120px) E POINTER EVENTS
+         ========================================================================== */
+      startDrag(e, cardEl, word, location, index) {
+        if (this.isLocked) return;
+
+        const rect = cardEl.getBoundingClientRect();
+        this.activeDrag = {
+          word,
+          originalLocation: location,
+          originalIndex: index,
+          element: cardEl,
+          offsetX: e.clientX - rect.left,
+          offsetY: e.clientY - rect.top,
+          width: rect.width,
+          startX: e.clientX,
+          startY: e.clientY,
+          hasMoved: false
+        };
+
+        try {
+          cardEl.setPointerCapture(e.pointerId);
+        } catch (err) {}
+      }
+
+      handlePointerMove(e) {
+        if (!this.activeDrag) return;
+
+        const dx = Math.abs(e.clientX - this.activeDrag.startX);
+        const dy = Math.abs(e.clientY - this.activeDrag.startY);
+
+        // Ativa o arraste flutuante após mover mais de 6px
+        if (!this.activeDrag.hasMoved && (dx > 6 || dy > 6)) {
+          this.activeDrag.hasMoved = true;
+          this.activeDrag.element.classList.add('drag-placeholder');
+
+          // Configura o Ghost Flutuante
+          this.dragGhost.textContent = `📄 ${this.activeDrag.word}`;
+          this.dragGhost.style.width = `${this.activeDrag.width}px`;
+          this.dragGhost.style.display = 'block';
+        }
+
+        if (this.activeDrag.hasMoved) {
+          const x = e.clientX - this.activeDrag.offsetX;
+          const y = e.clientY - this.activeDrag.offsetY;
+          this.dragGhost.style.left = `${x}px`;
+          this.dragGhost.style.top = `${y}px`;
+
+          // Detecta proximidade com os 3 sockets (<120px)
+          this.checkSocketProximity(e.clientX, e.clientY);
+        }
+      }
+
+      checkSocketProximity(cursorX, cursorY) {
+        let closestSocket = null;
+        let minDistance = 120; // Raio magnético de 120px conforme especificação
+
+        this.socketElements.forEach((socketEl, idx) => {
+          const rect = socketEl.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          const distance = Math.hypot(cursorX - centerX, cursorY - centerY);
+
+          socketEl.classList.remove('drag-over');
+
+          if (distance < minDistance) {
+            minDistance = distance;
+            closestSocket = idx;
+          }
+        });
+
+        if (closestSocket !== null) {
+          this.socketElements[closestSocket].classList.add('drag-over');
+        }
+
+        return closestSocket;
+      }
+
+      handlePointerUp(e) {
+        if (!this.activeDrag) return;
+
+        const { word, originalLocation, originalIndex, hasMoved, element } = this.activeDrag;
+
+        if (hasMoved) {
+          // Marca para suprimir o evento sintético de clique subsequente
+          this.suppressClick = true;
+          setTimeout(() => { this.suppressClick = false; }, 200);
+
+          // Ocultar Ghost e restaurar elemento original
+          this.dragGhost.style.display = 'none';
+          element.classList.remove('drag-placeholder');
+
+          const targetSocket = this.checkSocketProximity(e.clientX, e.clientY);
+
+          // Limpa realces visuais
+          this.socketElements.forEach(s => s.classList.remove('drag-over'));
+
+          if (targetSocket !== null) {
+            // Auto-snap no socket correspondente (<120px)
+            if (originalLocation === 'reserve') {
+              this.equipWord(word, originalIndex, targetSocket);
+            } else if (originalLocation === 'socket') {
+              if (targetSocket !== originalIndex) {
+                // Troca entre sockets
+                const currentOccupant = this.equippedWords[targetSocket];
+                this.equippedWords[originalIndex] = currentOccupant;
+                this.equippedWords[targetSocket] = word;
+                this.audio.playSnap();
+                this.renderSockets();
+                this.updateAttackButtonState();
+              }
+            }
+          } else {
+            // Solto fora do raio de 120px
+            if (originalLocation === 'socket') {
+              // Se foi arrastado para a área da reserva, desequipa
+              const reserveRect = this.reserveContainer.getBoundingClientRect();
+              if (
+                e.clientX >= reserveRect.left &&
+                e.clientX <= reserveRect.right &&
+                e.clientY >= reserveRect.top &&
+                e.clientY <= reserveRect.bottom
+              ) {
+                this.unequipWord(originalIndex);
+              } else {
+                this.renderSockets();
+              }
+            } else {
+              this.renderReserve();
+            }
+          }
+        }
+
+        this.activeDrag = null;
+      }
+
+      /* ==========================================================================
+         G. MECÂNICA DE ATAQUE, VALIDAÇÃO SINTÁTICA E IMPACTO DEAF-FIRST
+         ========================================================================== */
+      updateAttackButtonState() {
+        const isComplete = this.equippedWords.every(w => w !== null);
+        this.btnAttack.disabled = !isComplete;
+        if (isComplete) {
+          this.btnAttack.classList.add('ready-pulse');
+        } else {
+          this.btnAttack.classList.remove('ready-pulse');
+        }
+      }
+
+      handleAttack() {
+        if (this.isLocked) return;
+
+        // Validação 1: Slots Incompletos
+        const filledCount = this.equippedWords.filter(w => w !== null).length;
+        if (filledCount < 3) {
+          this.triggerIncompleteSlotsFeedback();
+          return;
+        }
+
+        const level = this.data.levels[this.currentLevelIndex];
+        const isCorrect = this.equippedWords.every((w, idx) => w === level.syntaxChallenge.correctOrder[idx]);
+
+        if (isCorrect) {
+          this.triggerCriticalHit();
+        } else {
+          this.triggerSyntaxError(level);
+        }
+      }
+
+      /* Resposta a Slots Incompletos */
+      triggerIncompleteSlotsFeedback() {
+        this.viewport.classList.remove('shake-subtle');
+        void this.viewport.offsetWidth;
+        this.viewport.classList.add('shake-subtle');
+
+        this.showFeedback(
+          'warning',
+          'Slots Incompletos!',
+          'Preencha todos os 3 espaços com [Sujeito], [Verbo] e [Objeto] antes de atacar.'
+        );
+      }
+
+      /* Resposta a Ordem Sintática Incorreta (Redução do Filtro Afetivo de Krashen) */
+      triggerSyntaxError(level) {
+        this.isLocked = true;
+        this.audio.playError();
+
+        // 1. Flash Carmesim em Tela Cheia
+        this.screenFlash.className = 'flash-crimson';
+
+        // 2. Tremor Leve de Tela
+        this.viewport.classList.remove('shake-subtle');
+        void this.viewport.offsetWidth;
+        this.viewport.classList.add('shake-subtle');
+
+        // 3. Texto Flutuante de Alerta
+        const center = this.getScreenCenter();
+        this.createFloatingText('ORDEM INCORRETA!', center.x, center.y, 'erro');
+
+        // 4. Banner com Dica Pedagógica Imediata
+        let specificTip = level.feedback.tip;
+        // Dica contextual se usou termo distrator
+        if (this.equippedWords.includes("estudaram")) {
+          specificTip = "Atenção à concordância: 'estudaram' está no plural, mas o sujeito 'A coordenadora' é singular. Use o verbo correto 'ajuda'.";
+        } else if (this.equippedWords.includes("cria")) {
+          specificTip = "Atenção à concordância: 'cria' está no singular, mas o sujeito 'Os alunos' está no plural. O verbo correto é 'criam'.";
+        }
+
+        this.showFeedback('error', 'Ajuste Sintático Necessário', specificTip);
+
+        setTimeout(() => {
+          this.isLocked = false;
+        }, 450);
+      }
+
+      /* Resposta a Acerto Crítico (100% IMPACTO VISUAL DEAF-FIRST) */
+      triggerCriticalHit() {
+        this.isLocked = true;
+        this.audio.playHit();
+        this.hideFeedback();
+
+        // 1. HIT-STOP DRAMÁTICO (Congelamento de 0.06s = 60ms)
+        const hitStopDuration = 60;
+        this.heroAvatar.classList.add('attacking');
+
+        setTimeout(() => {
+          // 2. Tremor Sísmico de Tela (Trauma Shake com Rotação no Eixo Z)
+          this.viewport.classList.remove('shake-trauma');
+          void this.viewport.offsetWidth;
+          this.viewport.classList.add('shake-trauma');
+
+          // 3. Flash Esmeralda em Tela Cheia
+          this.screenFlash.className = 'flash-emerald';
+
+          // 4. Onda de Choque Radial
+          const enemyRect = this.enemyAvatar.getBoundingClientRect();
+          const targetX = enemyRect.left + enemyRect.width / 2;
+          const targetY = enemyRect.top + enemyRect.height / 2;
+          this.createShockwave(targetX, targetY);
+
+          // 5. Burst de mais de 35 Partículas Luminosas
+          this.particles.burst(targetX, targetY, 40, '#34d399');
+
+          // 6. Número Flutuante Elástico (-100 CRÍTICO!)
+          this.createFloatingText('-100 CRÍTICO!', targetX, targetY - 25, 'critico');
+
+          // 7. Dano Visual no Inimigo e Barra de Vida
+          this.enemyAvatar.classList.add('damaged');
+          this.enemyHpFill.classList.add('hit');
+          this.enemyCurrentHp = 0;
+          this.updateEnemyHpDisplay();
+
+          // Transição de Fase ou Vitória Final
+          setTimeout(() => {
+            this.heroAvatar.classList.remove('attacking');
+            this.enemyAvatar.classList.remove('damaged');
+            this.enemyHpFill.classList.remove('hit');
+
+            if (this.currentLevelIndex < this.data.levels.length - 1) {
+              // Avanço para a Fase 2
+              this.showFeedback('success', 'Fase 1 Concluída!', 'A Barreira da Insegurança ruiu diante do domínio canônico SVO!');
+              setTimeout(() => {
+                this.loadLevel(this.currentLevelIndex + 1);
+                this.isLocked = false;
+              }, 1700);
+            } else {
+              // Vitória Total do Jogo
+              this.audio.playVictory();
+              this.modalVictory.classList.add('active');
+              this.isLocked = false;
+            }
+          }, 950);
+
+        }, hitStopDuration);
+      }
+
+      /* ==========================================================================
+         H. UTILITÁRIOS VISUAIS E DE FEEDBACK
+         ========================================================================== */
+      updateEnemyHpDisplay() {
+        const level = this.data.levels[this.currentLevelIndex];
+        const percent = Math.max(0, (this.enemyCurrentHp / level.enemy.maxHp) * 100);
+        this.enemyHpFill.style.width = `${percent}%`;
+        this.enemyCurrentHpEl.textContent = this.enemyCurrentHp;
+        this.enemyMaxHpEl.textContent = level.enemy.maxHp;
+      }
+
+      createShockwave(x, y) {
+        const wave = document.createElement('div');
+        wave.className = 'shockwave';
+        wave.style.left = `${x}px`;
+        wave.style.top = `${y}px`;
+        document.body.appendChild(wave);
+        setTimeout(() => wave.remove(), 750);
+      }
+
+      createFloatingText(text, x, y, type) {
+        const el = document.createElement('div');
+        el.className = `floating-text ${type}`;
+        el.textContent = text;
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1150);
+      }
+
+      showFeedback(type, title, text) {
+        this.feedbackBanner.className = `feedback-banner show ${type}`;
+        this.feedbackTitle.textContent = title;
+        this.feedbackText.textContent = text;
+        this.feedbackIcon.textContent = type === 'warning' ? '⚠️' : (type === 'error' ? '💡' : '🎉');
+      }
+
+      hideFeedback() {
+        this.feedbackBanner.className = 'feedback-banner';
+      }
+
+      getScreenCenter() {
+        return {
+          x: window.innerWidth / 2,
+          y: window.innerHeight / 2
+        };
+      }
+    }
+
+    // Inicialização da Aplicação
+    document.addEventListener('DOMContentLoaded', () => {
+      window.gameInstance = new ScassiottiQuestGame();
+    });
+  </script>
+</body>
+</html>
