@@ -13,6 +13,9 @@ import {
   CheckCircle2
 } from 'lucide-vue-next';
 
+// Modo Produção: oculta utilitários de programador ("Testar arquivo .mp4" e aviso técnico de rodapé)
+const IS_DEV_MODE = false;
+
 const props = defineProps({
   videoUrl: {
     type: String,
@@ -40,10 +43,6 @@ const props = defineProps({
   }
 });
 
-// Controle do arquivo de vídeo:
-// 1. Tenta carregar automaticamente o arquivo definido em `videoUrl` (ex: /videos/fase1_coord_ajuda_aluno.mp4)
-// 2. Se o arquivo ainda não existir na pasta `public/videos/`, ativa automaticamente o Palco Visual da Professora
-// 3. Permite também carregar um arquivo .mp4 local na hora (para testes/apresentação) sem precisar mexer no código
 const videoOk = ref(true);
 const customVideoBlobUrl = ref(null);
 const isOpen = ref(false);
@@ -56,6 +55,7 @@ const activeStepIndex = ref(0);
 let stepInterval = null;
 
 const effectiveVideoSrc = computed(() => customVideoBlobUrl.value || props.videoUrl);
+const uppercaseGloss = computed(() => (props.gloss || '').toUpperCase());
 
 const roleStyles = {
   SUJEITO: {
@@ -113,8 +113,6 @@ const onKey = (e) => {
   if (e.key === 'Escape') close();
 };
 
-// Quando muda de rodada/fase ou quando o jogador fecha o menu inicial para jogar,
-// abre automaticamente a tela de vídeo da professora explicando a frase!
 watch(
   [() => props.roundKey, () => props.autoOpenActive],
   ([newRoundKey, canAutoOpen], [oldRoundKey, wasAutoOpen]) => {
@@ -188,15 +186,16 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <!-- Barra compacta no topo do palco de batalha: permite rever o vídeo da professora a qualquer momento -->
+  <!-- Banner superior no ecrã de combate (Glassmorphism):
+       Mantém APENAS a glosa em maiúsculas e o botão "Ver Vídeo" (sem spoiler da frase conjugada) -->
   <section
-    class="sign-card flex items-center justify-between gap-2.5 sm:gap-3 rounded-3xl p-2 sm:p-2.5"
+    class="sign-card flex items-center justify-between gap-2.5 sm:gap-3.5 rounded-3xl p-2 sm:p-3"
     aria-label="Enunciado em Libras da Professora"
   >
-    <!-- Miniatura do Vídeo / Avatar da Professora clicável -->
+    <!-- Miniatura do Vídeo / Ilustração RPG da Professora clicável -->
     <button
       type="button"
-      class="group relative shrink-0 w-24 sm:w-32 aspect-[16/10] rounded-2xl overflow-hidden bg-slate-900 ring-2 ring-sky-300/70 hover:ring-amber-300 transition-all focus:outline-none"
+      class="group relative shrink-0 w-20 sm:w-28 aspect-[16/10] rounded-2xl overflow-hidden bg-slate-900/90 ring-2 ring-amber-300/70 hover:ring-amber-300 transition-all focus:outline-none"
       aria-label="Abrir tela de vídeo da Professora Scassiotti"
       @click="open"
     >
@@ -216,9 +215,9 @@ onBeforeUnmount(() => {
         class="absolute inset-0 flex items-end justify-center bg-gradient-to-b from-indigo-900/90 to-slate-950"
       >
         <img
-          src="/images/teacher_sprite.webp"
+          src="/images/scassiotti_rpg.png"
           alt=""
-          class="h-[92%] w-auto object-contain object-bottom group-hover:scale-105 transition-transform"
+          class="h-[95%] w-auto object-contain object-bottom group-hover:scale-105 transition-transform"
           draggable="false"
         />
       </div>
@@ -235,17 +234,14 @@ onBeforeUnmount(() => {
       </span>
     </button>
 
-    <!-- Glosa e contexto resumido -->
+    <!-- APENAS Glosa em Letras Maiúsculas (sem frase traduzida que entregava o verbo conjugado) -->
     <div class="min-w-0 flex-1">
       <p class="flex items-center gap-1.5 text-[11px] sm:text-xs font-extrabold uppercase tracking-wider text-sky-200">
         <Hand class="w-3.5 h-3.5 text-amber-300 shrink-0" aria-hidden="true" />
-        <span>Sinal em Libras (Glosa)</span>
+        <span>SINAL EM LIBRAS (GLOSA)</span>
       </p>
-      <p class="mt-0.5 text-base sm:text-xl font-black leading-tight tracking-wide text-white truncate">
-        {{ gloss }}
-      </p>
-      <p v-if="contextSentence" class="hidden sm:block text-xs font-semibold text-sky-100/80 truncate mt-0.5">
-        {{ contextSentence }}
+      <p class="mt-0.5 text-base sm:text-2xl font-black uppercase leading-tight tracking-wider text-amber-100 truncate drop-shadow">
+        {{ uppercaseGloss }}
       </p>
     </div>
 
@@ -261,7 +257,7 @@ onBeforeUnmount(() => {
   </section>
 
   <!-- =========================================================================
-       TELA DE VÍDEO DA PROFESSORA (Abre antes da rodada e ao clicar em "Ver Vídeo")
+       MODAL DE VÍDEO DA PROFESSORA (Abre antes da rodada e ao clicar em "Ver Vídeo")
        ========================================================================= -->
   <Teleport to="body">
     <Transition name="modal-pop">
@@ -290,8 +286,8 @@ onBeforeUnmount(() => {
               </h2>
             </div>
 
-            <!-- Botão para testar um arquivo .mp4 local na hora -->
-            <div class="flex items-center gap-2">
+            <!-- Utilitário de programador controlado por IS_DEV_MODE -->
+            <div v-if="IS_DEV_MODE" class="flex items-center gap-2">
               <input
                 ref="fileInput"
                 type="file"
@@ -315,7 +311,7 @@ onBeforeUnmount(() => {
           <div
             class="relative mt-3 rounded-2xl overflow-hidden bg-slate-950 border-2 border-sky-300/40 shadow-inner"
           >
-            <!-- MODO 1: Arquivo de vídeo .mp4 disponível (carrega automaticamente de public/videos/ ou do botão de teste) -->
+            <!-- MODO 1: Arquivo de vídeo .mp4 disponível -->
             <div v-if="videoOk" class="relative aspect-video w-full bg-black">
               <video
                 ref="bigVideo"
@@ -335,51 +331,51 @@ onBeforeUnmount(() => {
               >
                 <div class="flex items-center gap-2 min-w-0">
                   <Hand class="w-5 h-5 text-amber-300 shrink-0" aria-hidden="true" />
-                  <span class="text-sm sm:text-lg font-black tracking-wide text-white truncate">
-                    {{ gloss }}
+                  <span class="text-sm sm:text-lg font-black uppercase tracking-wide text-white truncate">
+                    {{ uppercaseGloss }}
                   </span>
                 </div>
-                <span class="text-xs font-bold text-emerald-300 shrink-0">Vídeo ativo</span>
+                <span class="text-xs font-bold text-emerald-300 shrink-0">Libras</span>
               </div>
             </div>
 
-            <!-- MODO 2: Simulador Visual da Professora (enquanto os vídeos .mp4 ainda não foram gravados) -->
+            <!-- MODO 2: Palco Visual da Professora Scassiotti -->
             <div
               v-else
               class="relative grid grid-cols-1 md:grid-cols-12 min-h-[270px] sm:min-h-[310px] bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 p-4 sm:p-5 gap-4 items-center"
             >
-              <!-- Coluna da Professora em destaque -->
-              <div class="md:col-span-5 relative flex flex-col items-center justify-end h-44 sm:h-60">
+              <!-- Coluna da Professora em destaque com a nova arte RPG -->
+              <div class="md:col-span-5 relative flex flex-col items-center justify-end h-48 sm:h-64">
                 <div
-                  class="absolute inset-0 rounded-2xl bg-gradient-to-t from-sky-500/15 via-transparent to-transparent pointer-events-none"
+                  class="absolute inset-0 rounded-2xl bg-gradient-to-t from-amber-500/15 via-sky-500/10 to-transparent pointer-events-none"
                 ></div>
                 <img
-                  src="/images/teacher_sprite.webp"
+                  src="/images/scassiotti_rpg.png"
                   alt="Professora Scassiotti sinalizando"
-                  class="relative z-10 h-full w-auto max-w-full object-contain object-bottom drop-shadow-[0_14px_24px_rgba(0,0,0,0.65)]"
+                  class="hero-sprite relative z-10 h-full w-auto max-w-full object-contain object-bottom"
                   :class="isPlaying ? 'animate-idle-bob' : ''"
                   draggable="false"
                 />
                 <span
-                  class="relative z-20 -mt-2 inline-flex items-center gap-1.5 rounded-full bg-sky-500 text-slate-950 px-3 py-1 text-xs font-black uppercase shadow-md"
+                  class="relative z-20 -mt-2 inline-flex items-center gap-1.5 rounded-full bg-amber-400 text-slate-950 px-3 py-1 text-xs font-black uppercase shadow-md"
                 >
                   <Hand class="w-3.5 h-3.5" aria-hidden="true" />
-                  Profª Scassiotti em Libras
+                  Profª Scassiotti • Libras
                 </span>
               </div>
 
               <!-- Coluna do Roteiro Visual e Sequência de Sinais -->
               <div class="md:col-span-7 flex flex-col justify-between gap-3">
-                <!-- Explicação contextual da professora -->
-                <div class="rounded-2xl bg-slate-950/75 border border-white/15 p-3">
+                <!-- Explicação contextual da professora (visível no modal antes da batalha) -->
+                <div class="rounded-2xl bg-slate-950/75 border border-white/15 p-3.5">
                   <p class="text-[11px] font-extrabold uppercase tracking-wider text-amber-300">
-                    Contexto explicado pela Professora:
+                    Contexto da Situação:
                   </p>
-                  <p class="mt-0.5 text-sm sm:text-base font-bold text-white leading-snug">
+                  <p class="mt-1 text-sm sm:text-base font-bold text-white leading-snug">
                     “{{ contextSentence || 'Observe os sinais em Libras abaixo para montar a frase em português.' }}”
                   </p>
-                  <p class="mt-1.5 text-xs font-extrabold text-sky-300">
-                    Glosa em Libras: <span class="text-white font-black tracking-wide">{{ gloss }}</span>
+                  <p class="mt-2 text-xs font-extrabold text-sky-300">
+                    Glosa em Libras: <span class="text-amber-200 font-black uppercase tracking-wide">{{ uppercaseGloss }}</span>
                   </p>
                 </div>
 
@@ -412,8 +408,9 @@ onBeforeUnmount(() => {
                   </div>
                 </div>
 
-                <!-- Aviso técnico discreto mostrando que o slot de vídeo já está pronto -->
+                <!-- Aviso técnico controlado por IS_DEV_MODE -->
                 <div
+                  v-if="IS_DEV_MODE"
                   class="flex items-center justify-between gap-2 rounded-xl bg-slate-950/60 border border-dashed border-sky-400/40 px-3 py-1.5 text-[11px] text-slate-300"
                 >
                   <span class="truncate">
@@ -423,6 +420,19 @@ onBeforeUnmount(() => {
                 </div>
               </div>
             </div>
+          </div>
+
+          <!-- Contexto de apoio quando o vídeo .mp4 real estiver ativo no modal -->
+          <div
+            v-if="videoOk && contextSentence"
+            class="mt-3 rounded-2xl bg-slate-950/75 border border-white/15 px-4 py-2.5"
+          >
+            <p class="text-[11px] font-extrabold uppercase tracking-wider text-amber-300">
+              Contexto explicado pela Professora:
+            </p>
+            <p class="mt-0.5 text-xs sm:text-sm font-bold text-slate-100 leading-snug">
+              “{{ contextSentence }}”
+            </p>
           </div>
 
           <!-- Controles de Reprodução + Botão Principal para ir ao Jogo -->

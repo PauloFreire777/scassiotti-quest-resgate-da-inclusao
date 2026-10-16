@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* ==========================================================================
-   DESIGN SYSTEM — "CREPÚSCULO NO CAMPUS"
+   DESIGN SYSTEM — "ARENA MÍSTICA DA INCLUSÃO" (RPG EDUCACIONAL DEAF-FIRST)
    Princípios (Deaf-First): comunicação por forma + cor + ícone (nunca só cor),
    texto curto e grande, alto contraste, feedback visual redundante,
    movimento opcional (prefers-reduced-motion) e alvos de toque ≥ 44px.
@@ -45,107 +45,128 @@ body {
 
 @layer components {
   /* ------------------------------------------------------------------------
-     CENÁRIO
+     CENÁRIO DE ARENA RPG (BACKGROUND)
+     Altar iluminado dourado/azul à esquerda (Heroína) e altar sombrio roxo
+     à direita (Monstro/Chefe).
      ------------------------------------------------------------------------ */
   .scene-bg {
-    background:
-      radial-gradient(90% 55% at 50% 105%, rgba(255, 178, 92, 0.38) 0%, rgba(255, 178, 92, 0) 70%),
-      radial-gradient(60% 40% at 15% 20%, rgba(125, 211, 252, 0.14) 0%, rgba(125, 211, 252, 0) 70%),
-      linear-gradient(180deg, #231a5a 0%, #3d2a86 52%, #6b3f9c 100%);
+    background-color: #130f2e;
+    background-image:
+      linear-gradient(
+        180deg,
+        rgba(12, 8, 30, 0.52) 0%,
+        rgba(20, 14, 48, 0.18) 42%,
+        rgba(14, 9, 36, 0.28) 72%,
+        rgba(10, 6, 26, 0.62) 100%
+      ),
+      url('/images/arena_bg.webp'),
+      url('/images/arena_bg.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
   }
 
-  /* Janelas arqueadas da biblioteca ao fundo (acolhimento acadêmico) */
-  .scene-window {
-    position: absolute;
-    top: 14%;
-    width: clamp(48px, 11vw, 96px);
-    height: clamp(90px, 28%, 190px);
-    border-radius: 999px 999px 8px 8px;
-    background: linear-gradient(180deg, rgba(255, 214, 140, 0.5) 0%, rgba(255, 170, 90, 0.16) 100%);
-    border: 3px solid rgba(255, 226, 170, 0.28);
-    box-shadow: 0 0 40px rgba(255, 190, 110, 0.18);
-    pointer-events: none;
-  }
-
-  @media (max-width: 639px) {
-    .scene-window {
-      top: 38%;
-      height: 24%;
-      width: 56px;
-    }
-  }
-
-  .scene-floor {
-    position: absolute;
-    inset: auto 0 0 0;
-    height: 30%;
-    background:
-      repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 72px),
-      linear-gradient(180deg, #4a3496 0%, #2a1f66 100%);
-    border-top: 3px solid rgba(255, 255, 255, 0.14);
-    pointer-events: none;
-  }
-
+  /* Sombra projetada sobre o pedestal da arena */
   .ground-shadow {
     position: absolute;
     left: 50%;
-    bottom: 0;
-    width: 78%;
-    height: 14px;
+    bottom: 2px;
+    width: 82%;
+    height: 18px;
     transform: translateX(-50%);
     border-radius: 50%;
-    background: radial-gradient(ellipse at center, rgba(8, 5, 28, 0.55) 0%, transparent 70%);
+    background: radial-gradient(ellipse at center, rgba(5, 2, 18, 0.85) 0%, rgba(5, 2, 18, 0.35) 55%, transparent 75%);
+    pointer-events: none;
   }
 
-  /* Mesa da professora: esconde o corte do busto e dá "chão" ao personagem */
-  .teacher-desk {
+  /* Auras mágicas nos pedestais da esquerda (dourado/azul) e direita (roxo sombrio) */
+  .pedestal-aura-hero {
     position: absolute;
-    inset: auto 4% 0 4%;
-    height: 17%;
-    border-radius: 18px 18px 6px 6px;
-    background: linear-gradient(180deg, #c98b4b 0%, #8a5428 100%);
-    border-top: 4px solid #e8b676;
-    box-shadow: 0 -6px 18px rgba(8, 5, 28, 0.25);
+    left: 50%;
+    bottom: 0;
+    width: 90%;
+    height: 36px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(251, 191, 36, 0.42) 0%,
+      rgba(56, 189, 248, 0.22) 48%,
+      transparent 75%
+    );
+    filter: blur(4px);
+    pointer-events: none;
   }
 
-  .teacher-desk::before {
-    content: '';
+  .pedestal-aura-monster {
     position: absolute;
-    left: 14%;
-    top: -16px;
-    width: 30%;
-    height: 16px;
-    border-radius: 6px 6px 0 0;
-    background: linear-gradient(90deg, #fff7e0 0 49%, #cdb98a 49% 51%, #fff7e0 51% 100%);
-    box-shadow: 0 -3px 0 #38bdf8;
+    left: 50%;
+    bottom: 0;
+    width: 90%;
+    height: 36px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(168, 85, 247, 0.45) 0%,
+      rgba(244, 63, 94, 0.18) 50%,
+      transparent 75%
+    );
+    filter: blur(4px);
+    pointer-events: none;
   }
 
-  /* Sprite com borda direita suavizada (o braço da imagem original é cortado) */
-  .fade-edge-right {
-    -webkit-mask-image: linear-gradient(to right, #000 82%, transparent 100%);
-    mask-image: linear-gradient(to right, #000 82%, transparent 100%);
+  /* Sprites dos personagens com sombra real projetada sobre os pedestais */
+  .hero-sprite {
+    filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 18px rgba(251, 191, 36, 0.28));
+    transition: filter 0.25s ease, transform 0.25s ease;
+  }
+
+  .monster-sprite {
+    filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 18px rgba(168, 85, 247, 0.32));
+    transition: filter 0.25s ease, transform 0.25s ease;
+  }
+
+  /* Moldura épica opcional caso seja utilizada imagem com fundo sólido (.jpg) */
+  .rpg-portrait-frame {
+    border: 3px solid rgba(251, 191, 36, 0.85);
+    border-radius: 1.5rem;
+    box-shadow:
+      0 0 24px rgba(251, 191, 36, 0.45),
+      inset 0 0 18px rgba(251, 191, 36, 0.25),
+      0 15px 25px rgba(0, 0, 0, 0.85);
+    overflow: hidden;
   }
 
   /* ------------------------------------------------------------------------
-     PAINÉIS
+     PAINÉIS COM EFEITO GLASSMORPHISM (VIDRO FOSCO)
      ------------------------------------------------------------------------ */
   .panel-console {
-    background: linear-gradient(180deg, #2a2350 0%, #1d1840 100%);
-    border-top: 3px solid rgba(255, 255, 255, 0.16);
-    box-shadow: 0 -12px 30px rgba(8, 5, 28, 0.45);
+    background: rgba(16, 11, 40, 0.56);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border-top: 2px solid rgba(251, 191, 36, 0.28);
+    box-shadow: 0 -12px 32px rgba(8, 5, 28, 0.55);
   }
 
   .nameplate {
-    background: rgba(19, 15, 46, 0.62);
-    border: 2px solid rgba(255, 255, 255, 0.16);
-    backdrop-filter: blur(6px);
+    background: rgba(20, 14, 48, 0.78);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.55);
   }
 
+  /* Banner superior da Glosa com Glassmorphism */
   .sign-card {
-    background: linear-gradient(180deg, rgba(29, 24, 64, 0.94) 0%, rgba(19, 15, 46, 0.94) 100%);
-    border: 3px solid rgba(125, 211, 252, 0.55);
-    box-shadow: 0 10px 28px rgba(8, 5, 28, 0.5), 0 0 0 4px rgba(125, 211, 252, 0.08);
+    background: rgba(20, 14, 48, 0.78);
+    -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
+    border: 2.5px solid rgba(125, 211, 252, 0.55);
+    box-shadow:
+      0 12px 28px rgba(8, 5, 28, 0.6),
+      0 0 0 4px rgba(125, 211, 252, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
   }
 
   /* ------------------------------------------------------------------------
@@ -201,14 +222,16 @@ body {
   }
 
   .btn-ghost {
-    --btn-face: rgba(255, 255, 255, 0.12);
-    --btn-edge: rgba(8, 5, 28, 0.55);
+    --btn-face: rgba(20, 14, 48, 0.78);
+    --btn-edge: rgba(8, 5, 28, 0.65);
     --btn-ink: #fff;
-    border: 2px solid rgba(255, 255, 255, 0.22);
+    border: 2px solid rgba(255, 255, 255, 0.24);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
   }
 
   /* ------------------------------------------------------------------------
-     CARTAS DE PALAVRA (papel) E ENCAIXES (sockets)
+     CARTAS DE PALAVRA (papel) E ENCAIXES (sockets "Quem?", "Ação", "Alvo")
      ------------------------------------------------------------------------ */
   .tile {
     position: relative;
@@ -225,17 +248,19 @@ body {
     font-size: clamp(1.05rem, 4.2vw, 1.3rem);
     line-height: 1.15;
     text-align: center;
-    box-shadow: 0 4px 0 #c9ae72, 0 8px 14px rgba(8, 5, 28, 0.38);
+    box-shadow: 0 4px 0 #c9ae72, 0 8px 14px rgba(8, 5, 28, 0.45);
     cursor: grab;
-    transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, opacity 0.12s;
+    transition: transform 0.14s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.14s ease-out, opacity 0.12s, filter 0.14s;
   }
 
   .tile:hover:not(:disabled) {
-    transform: translateY(-3px);
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 6px 0 #c9ae72, 0 12px 20px rgba(8, 5, 28, 0.5), 0 0 14px rgba(251, 191, 36, 0.35);
+    filter: brightness(1.03);
   }
 
   .tile:active:not(:disabled) {
-    transform: translateY(3px);
+    transform: translateY(3px) scale(0.98);
     box-shadow: 0 1px 0 #c9ae72, 0 3px 6px rgba(8, 5, 28, 0.38);
     cursor: grabbing;
   }
@@ -246,8 +271,8 @@ body {
   }
 
   .tile--placed {
-    padding: 0.45rem 0.3rem;
-    font-size: clamp(0.76rem, 3.1vw, 1.15rem);
+    padding: 0.45rem 0.35rem;
+    font-size: clamp(0.78rem, 3.1vw, 1.15rem);
     width: 100%;
   }
 
@@ -260,6 +285,7 @@ body {
 
   .tile--dragging {
     opacity: 0.45;
+    transform: scale(0.95);
   }
 
   .tile--hint {
@@ -275,6 +301,7 @@ body {
     outline-offset: 2px;
   }
 
+  /* Cards inferiores ("Quem?", "Ação", "Alvo") com Glassmorphism */
   .socket {
     --sock: var(--role-sujeito);
     position: relative;
@@ -282,28 +309,60 @@ body {
     flex-direction: column;
     gap: 0.4rem;
     min-height: 104px;
-    padding: 0.4rem;
+    padding: 0.45rem;
     border-radius: 1.15rem;
-    border: 3px dashed rgb(var(--sock) / 0.75);
-    background: rgb(var(--sock) / 0.14);
-    transition: transform 0.15s ease-out, background 0.15s, box-shadow 0.15s, border-color 0.15s;
+    border: 2.5px dashed rgb(var(--sock) / 0.8);
+    background: rgba(20, 14, 48, 0.78);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    box-shadow:
+      0 8px 22px rgba(8, 5, 28, 0.52),
+      inset 0 0 20px rgb(var(--sock) / 0.14);
+    transition: transform 0.16s ease-out, background 0.16s, box-shadow 0.16s, border-color 0.16s;
+    cursor: pointer;
   }
 
   @media (min-width: 640px) {
     .socket {
-      padding: 0.55rem;
+      padding: 0.6rem;
     }
+  }
+
+  .socket:hover {
+    transform: translateY(-2px);
+    border-color: rgb(var(--sock));
+    box-shadow:
+      0 10px 26px rgba(8, 5, 28, 0.6),
+      inset 0 0 24px rgb(var(--sock) / 0.22);
   }
 
   .socket--filled {
     border-style: solid;
-    background: rgb(var(--sock) / 0.26);
+    background: rgba(20, 14, 48, 0.78);
+    box-shadow:
+      0 8px 22px rgba(8, 5, 28, 0.55),
+      inset 0 0 26px rgb(var(--sock) / 0.26);
+  }
+
+  .socket--selected {
+    border-style: solid;
+    border-color: rgb(var(--sock));
+    transform: translateY(-3px);
+    box-shadow:
+      0 0 0 3px rgb(var(--sock) / 0.45),
+      0 12px 26px rgba(8, 5, 28, 0.65),
+      inset 0 0 30px rgb(var(--sock) / 0.3);
   }
 
   .socket--over {
-    transform: scale(1.04);
-    background: rgb(var(--sock) / 0.34);
-    box-shadow: 0 0 0 5px rgb(var(--sock) / 0.35);
+    transform: scale(1.04) translateY(-2px);
+    border-style: solid;
+    border-color: rgb(var(--sock));
+    background: rgba(20, 14, 48, 0.86);
+    box-shadow:
+      0 0 0 5px rgb(var(--sock) / 0.42),
+      0 12px 28px rgba(8, 5, 28, 0.65),
+      inset 0 0 32px rgb(var(--sock) / 0.35);
   }
 
   .socket--invalid {
@@ -320,7 +379,7 @@ body {
     height: 16px;
     border-radius: 999px;
     overflow: hidden;
-    background: rgba(8, 5, 28, 0.75);
+    background: rgba(8, 5, 28, 0.78);
     border: 2px solid rgba(255, 255, 255, 0.25);
   }
 
@@ -344,6 +403,179 @@ body {
 }
 
 /* ==========================================================================
+   ANIMAÇÕES DE COMBATE & FEITIÇO DO LIVRO MÁGICO ("GAME FEEL")
+   ========================================================================== */
+
+/* Brilho dourado intenso na heroína durante o ataque */
+.animate-hero-attack .hero-sprite {
+  filter:
+    drop-shadow(0 0 28px rgba(251, 191, 36, 0.95))
+    drop-shadow(0 0 50px rgba(245, 158, 11, 0.65))
+    drop-shadow(0 15px 25px rgba(0, 0, 0, 0.85));
+}
+
+/* Piscar em vermelho/branco no monstro ao receber o feitiço e perder HP */
+.animate-monster-hit .monster-sprite {
+  animation: monsterDamageFlash 0.65s ease-out both;
+}
+
+/* Brilho sombrio/carmesim quando o monstro avança ao errar a frase */
+.animate-monster-attack .monster-sprite {
+  filter:
+    drop-shadow(0 0 28px rgba(244, 63, 94, 0.9))
+    drop-shadow(0 0 45px rgba(168, 85, 247, 0.75))
+    drop-shadow(0 15px 25px rgba(0, 0, 0, 0.85));
+}
+
+@keyframes monsterDamageFlash {
+  0%, 100% {
+    filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.85)) brightness(1);
+  }
+  15% {
+    filter:
+      brightness(2.8)
+      contrast(1.4)
+      saturate(0.15)
+      drop-shadow(0 0 35px rgba(255, 255, 255, 1));
+  }
+  35% {
+    filter:
+      brightness(1.4)
+      sepia(1)
+      hue-rotate(-50deg)
+      saturate(5)
+      drop-shadow(0 0 38px rgba(244, 63, 94, 1));
+  }
+  55% {
+    filter:
+      brightness(2.3)
+      saturate(0.3)
+      drop-shadow(0 0 28px rgba(251, 191, 36, 0.95));
+  }
+  75% {
+    filter:
+      brightness(1.3)
+      sepia(0.8)
+      hue-rotate(-50deg)
+      saturate(4)
+      drop-shadow(0 0 24px rgba(244, 63, 94, 0.85));
+  }
+}
+
+/* Feitiço dourado disparado do livro mágico da Profª Scassiotti até o monstro */
+.spell-projectile-track {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 25;
+  overflow: hidden;
+}
+
+.spell-beam {
+  position: absolute;
+  left: 26%;
+  bottom: 40%;
+  width: 48%;
+  height: 10px;
+  transform-origin: left center;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(254, 243, 199, 0) 0%,
+    rgba(251, 191, 36, 0.85) 35%,
+    #fffbeb 75%,
+    #38bdf8 100%
+  );
+  box-shadow:
+    0 0 24px #fbbf24,
+    0 0 48px rgba(245, 158, 11, 0.85);
+  animation: spellBeamShoot 0.52s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.spell-orb {
+  position: absolute;
+  left: 26%;
+  bottom: 38%;
+  width: 64px;
+  height: 64px;
+  margin-left: -32px;
+  margin-bottom: -32px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    #ffffff 0%,
+    #fef08a 32%,
+    #f59e0b 65%,
+    rgba(245, 158, 11, 0) 100%
+  );
+  box-shadow:
+    0 0 32px 10px rgba(251, 191, 36, 0.9),
+    0 0 64px 20px rgba(56, 189, 248, 0.45);
+  animation: spellOrbFly 0.52s cubic-bezier(0.2, 0.85, 0.35, 1) forwards;
+}
+
+.spell-orb::before {
+  content: '✦';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  color: #fffbeb;
+  text-shadow: 0 0 14px #fbbf24;
+  animation: spinRune 0.52s linear infinite;
+}
+
+@keyframes spellBeamShoot {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.05) translateY(0);
+  }
+  25% {
+    opacity: 1;
+    transform: scaleX(0.6) translateY(-6px);
+  }
+  65% {
+    opacity: 1;
+    transform: scaleX(1.05) translateY(-12px);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1.12) translateY(-12px);
+  }
+}
+
+@keyframes spellOrbFly {
+  0% {
+    left: 26%;
+    bottom: 38%;
+    transform: scale(0.35) rotate(0deg);
+    opacity: 0;
+  }
+  18% {
+    opacity: 1;
+    transform: scale(1.15) rotate(60deg);
+  }
+  78% {
+    left: 74%;
+    bottom: 46%;
+    transform: scale(1.35) rotate(220deg);
+    opacity: 1;
+  }
+  100% {
+    left: 76%;
+    bottom: 47%;
+    transform: scale(2.2) rotate(280deg);
+    opacity: 0;
+  }
+}
+
+@keyframes spinRune {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
    EFEITOS DE JOGO (feedback visual redundante para surdos)
    ========================================================================== */
 
@@ -356,13 +588,21 @@ body {
 }
 
 .flash-overlay.flash-emerald {
-  background: radial-gradient(circle, rgba(52, 211, 153, 0.35) 0%, rgba(52, 211, 153, 0.05) 75%);
-  animation: flashFade 0.4s ease-out forwards;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.22) 0%, rgba(52, 211, 153, 0.28) 65%, rgba(16, 185, 129, 0.42) 100%);
+  box-shadow: inset 0 0 70px 18px rgba(52, 211, 153, 0.45);
+  animation: flashFade 0.48s ease-out forwards;
 }
 
+/* Flash avermelhado nas bordas do ecrã ao errar (acessibilidade visual surda) */
 .flash-overlay.flash-crimson {
-  background: radial-gradient(circle, rgba(251, 113, 133, 0.35) 0%, rgba(251, 113, 133, 0.05) 75%);
-  animation: flashFade 0.4s ease-out forwards;
+  background: radial-gradient(
+    circle at center,
+    rgba(244, 63, 94, 0.04) 35%,
+    rgba(244, 63, 94, 0.35) 80%,
+    rgba(225, 29, 72, 0.68) 100%
+  );
+  box-shadow: inset 0 0 90px 28px rgba(225, 29, 72, 0.65);
+  animation: flashFade 0.55s ease-out forwards;
 }
 
 @keyframes flashFade {
@@ -372,45 +612,55 @@ body {
 
 .shockwave-element {
   position: fixed;
-  width: 120px;
-  height: 120px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
   border: 6px solid #fde68a;
-  box-shadow: 0 0 40px #fbbf24, inset 0 0 25px #fbbf24;
+  box-shadow: 0 0 45px #fbbf24, inset 0 0 28px #fbbf24;
   pointer-events: none;
   z-index: 9998;
   transform: translate(-50%, -50%) scale(0.1);
-  animation: shockwaveAnim 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+  animation: shockwaveAnim 0.62s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
 }
 
 @keyframes shockwaveAnim {
   0% { transform: translate(-50%, -50%) scale(0.1); opacity: 1; }
-  100% { transform: translate(-50%, -50%) scale(3.5); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(3.6); opacity: 0; }
 }
 
-/* Texto de dano/alerta: contorno forte (legível sobre qualquer fundo) */
+/* Texto de impacto ("ACERTOU!", "-1 ♥"): contorno forte e animação de impacto */
 .combat-text {
   position: fixed;
   z-index: 10000;
   pointer-events: none;
   white-space: nowrap;
   font-weight: 1000;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
   -webkit-text-stroke: 6px #130f2e;
   paint-order: stroke fill;
-  text-shadow: 0 6px 16px rgba(8, 5, 28, 0.7);
-  animation: combatFloat 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  text-shadow: 0 8px 20px rgba(8, 5, 28, 0.85), 0 0 24px rgba(251, 191, 36, 0.55);
+  animation: combatFloat 1.05s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-.combat-text.critico { color: #6ee7b7; font-size: 2.4rem; }
-.combat-text.erro { color: #fda4af; font-size: 1.9rem; }
-.combat-text.alerta { color: #fde68a; font-size: 1.6rem; }
+.combat-text.critico {
+  color: #fde047;
+  font-size: clamp(2.1rem, 5vw, 2.8rem);
+}
+.combat-text.erro {
+  color: #fda4af;
+  font-size: clamp(1.8rem, 4.5vw, 2.2rem);
+}
+.combat-text.alerta {
+  color: #fde68a;
+  font-size: clamp(1.5rem, 4vw, 1.8rem);
+}
 
 @keyframes combatFloat {
-  0% { opacity: 0; transform: translate(-50%, 0) scale(0.4); }
-  20% { opacity: 1; transform: translate(-50%, -25px) scale(1.25); }
-  75% { opacity: 1; transform: translate(-50%, -60px) scale(1); }
-  100% { opacity: 0; transform: translate(-50%, -90px) scale(0.85); }
+  0% { opacity: 0; transform: translate(-50%, 12px) scale(0.25) rotate(-6deg); }
+  18% { opacity: 1; transform: translate(-50%, -24px) scale(1.38) rotate(3deg); }
+  34% { opacity: 1; transform: translate(-50%, -32px) scale(1.1) rotate(-1deg); }
+  75% { opacity: 1; transform: translate(-50%, -62px) scale(1) rotate(0deg); }
+  100% { opacity: 0; transform: translate(-50%, -92px) scale(0.85); }
 }
 
 @keyframes hintPulse {
@@ -428,6 +678,11 @@ body {
   .animate-idle-bob,
   .animate-idle-float,
   .animate-hit,
+  .animate-hero-attack,
+  .animate-hero-hit,
+  .animate-monster-hit,
+  .animate-monster-attack,
+  .animate-heart-break,
   .animate-wave,
   .animate-pulse,
   .tile--hint,
@@ -436,7 +691,8 @@ body {
   }
 
   .flash-overlay,
-  .shockwave-element {
+  .shockwave-element,
+  .spell-projectile-track {
     display: none;
   }
 

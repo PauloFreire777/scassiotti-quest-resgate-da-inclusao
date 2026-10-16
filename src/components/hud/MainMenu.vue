@@ -65,28 +65,36 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey));
         aria-modal="true"
         aria-labelledby="menu-title"
       >
-        <!-- Cenário da tela inicial -->
-        <div class="scene-window" style="left: 5%" aria-hidden="true"></div>
-        <div class="scene-window" style="right: 5%" aria-hidden="true"></div>
-        <div class="scene-floor" aria-hidden="true"></div>
-
         <div class="relative min-h-full flex flex-col items-center justify-center gap-5 px-5 py-8">
           <!-- Logotipo -->
           <div class="text-center">
-            <p class="inline-flex items-center gap-2 rounded-full bg-black/25 border-2 border-white/20 px-4 py-1 text-sm sm:text-base font-extrabold text-amber-200">
+            <p class="inline-flex items-center gap-2 rounded-full bg-slate-950/65 backdrop-blur-md border-2 border-amber-300/40 px-4 py-1 text-sm sm:text-base font-extrabold text-amber-200 shadow-lg">
               <span aria-hidden="true">🤟</span> Libras ➔ Português
             </p>
-            <h1 id="menu-title" class="mt-3 text-5xl sm:text-7xl font-black leading-[0.95] tracking-tight drop-shadow-[0_6px_0_rgba(8,5,28,0.55)]">
+            <h1 id="menu-title" class="mt-3 text-5xl sm:text-7xl font-black leading-[0.95] tracking-tight drop-shadow-[0_6px_12px_rgba(8,5,28,0.85)]">
               Scassiotti
               <span class="block text-amber-300">Quest</span>
             </h1>
-            <p class="mt-3 text-base sm:text-xl font-bold text-sky-100">O Resgate da Inclusão</p>
+            <p class="mt-2.5 text-base sm:text-xl font-bold text-sky-100 drop-shadow">
+              O Resgate da Inclusão
+            </p>
           </div>
 
-          <!-- Elenco: proporção equilibrada entre Professora e Monstro -->
-          <div class="relative flex items-end justify-center gap-3 sm:gap-8 w-full max-w-md h-[22dvh] min-h-[135px] max-h-[240px]" aria-hidden="true">
-            <img src="/images/teacher_sprite.webp" alt="" class="h-[96%] max-w-[48%] w-auto object-contain object-bottom fade-edge-right animate-idle-bob drop-shadow-[0_12px_18px_rgba(8,5,28,0.55)]" draggable="false" />
-            <img src="/images/monster_sprite.webp" alt="" class="h-[92%] max-w-[48%] w-auto object-contain object-bottom animate-idle-float drop-shadow-[0_12px_18px_rgba(8,5,28,0.55)]" draggable="false" />
+          <!-- Elenco RPG: Profª Scassiotti (com livro mágico) e Monstro da Barreira -->
+          <div class="relative flex items-end justify-center gap-4 sm:gap-10 w-full max-w-lg h-[25dvh] min-h-[155px] max-h-[260px]" aria-hidden="true">
+            <img
+              src="/images/scassiotti_rpg.png"
+              alt="Professora Scassiotti"
+              class="hero-sprite h-[98%] max-w-[48%] w-auto object-contain object-bottom animate-idle-bob"
+              draggable="false"
+              @error="(e) => { e.target.src = '/images/scassiotti_rpg.jpg'; e.target.classList.add('rpg-portrait-frame'); }"
+            />
+            <img
+              src="/images/monster_sprite.webp"
+              alt="Monstro da Barreira"
+              class="monster-sprite h-[94%] max-w-[48%] w-auto object-contain object-bottom animate-idle-float"
+              draggable="false"
+            />
           </div>
 
           <!-- Placar -->
@@ -126,7 +134,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey));
 
             <button
               type="button"
-              class="mx-auto flex items-center gap-1.5 min-h-[44px] px-3 text-sm font-bold text-slate-300 hover:text-rose-300"
+              class="mx-auto flex items-center gap-1.5 min-h-[44px] px-3 text-sm font-bold text-slate-200 hover:text-rose-300 drop-shadow"
               @click="emit('resetProgress')"
             >
               <RotateCcw class="w-4 h-4" aria-hidden="true" />

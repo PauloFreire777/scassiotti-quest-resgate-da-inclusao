@@ -15,7 +15,7 @@ import VictoryModal from './components/hud/VictoryModal.vue';
 const battle = useBattle();
 const { isShaking, activeFlash, floatingTexts, shockwaves } = useVisualEffects();
 
-// Modais e Telas — o jogo agora abre na tela inicial (antes caía direto na batalha)
+// Modais e Telas — abre na tela inicial
 const isMenuOpen = ref(true);
 const isMapOpen = ref(false);
 const isTheoryOpen = ref(false);
@@ -71,7 +71,6 @@ const handleRestartGame = () => {
 };
 
 onMounted(() => {
-  // Retoma da fase mais avançada já desbloqueada (antes sempre recomeçava na Fase 1)
   const unlocked = battle.storage.saveState.value.unlockedLevelIds;
   const furthestId = unlocked?.length ? Math.max(...unlocked) : 1;
   const index = battle.allLevels.value.findIndex((l) => l.id === furthestId);
@@ -80,13 +79,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <!-- Casca do jogo: ocupa exatamente a tela (100dvh). Em telas muito baixas, rola em vez de cortar. -->
-  <div class="h-dvh w-full overflow-y-auto overflow-x-hidden bg-slate-950 text-white">
+  <!-- Casca do jogo com o cenário da Arena RPG estendido sob toda a interface para efeito Glassmorphism real -->
+  <div class="h-dvh w-full overflow-y-auto overflow-x-hidden scene-bg text-white">
     <div
       :class="{ 'animate-screen-shake': isShaking }"
       class="min-h-full w-full flex flex-col select-none"
     >
-      <!-- Overlay de flash cromático (suave; desligado com prefers-reduced-motion) -->
+      <!-- Overlay de flash cromático (acessibilidade visual surda: brilho esmeralda no acerto / vinheta carmesim nas bordas no erro) -->
       <div
         v-if="activeFlash"
         class="flash-overlay"
@@ -103,7 +102,7 @@ onMounted(() => {
         aria-hidden="true"
       ></div>
 
-      <!-- Números flutuantes de dano -->
+      <!-- Textos flutuantes de impacto ("ACERTOU!", "-1 ♥") -->
       <div
         v-for="ct in floatingTexts"
         :key="ct.id"
@@ -127,7 +126,7 @@ onMounted(() => {
       />
 
       <main class="flex-1 min-h-0 flex flex-col">
-        <!-- 2. Cena: sinal em Libras + professora vs. barreira (o feedback aparece como balão dentro da cena) -->
+        <!-- 2. Arena RPG: Glosa em Libras + Profª Scassiotti (pedestal esquerdo) vs. Chefe (pedestal direito) -->
         <BattleStage
           v-if="battle.currentRound.value && battle.currentEnemy.value"
           class="flex-1"
@@ -143,21 +142,25 @@ onMounted(() => {
           :enemy-hp="battle.enemyHp.value"
           :max-enemy-hp="battle.maxEnemyHp.value"
           :is-attacking="battle.isAttacking.value"
+          :combat-anim-state="battle.combatAnimState.value"
         >
           <FeedbackBanner :feedback="battle.feedbackMessage.value" />
         </BattleStage>
 
-        <!-- 3. Console de montagem: encaixes SVO + cartas + ações -->
+        <!-- 3. Console de montagem com Glassmorphism: cards SVO ("Quem?", "Ação", "Alvo") + banco de palavras -->
         <SyntaxArena
           v-if="battle.currentRound.value"
           :slots="battle.playerSlots.value"
           :word-bank="battle.wordBank.value"
+          :selected-slot-index="battle.selectedSlotIndex.value"
           :invalid-slot-indices="battle.invalidSlotIndices.value"
           :hinted-token-id="battle.activeHint.value?.recommendedFirstTokenId"
           :is-attacking="battle.isAttacking.value"
           @select-token="battle.selectToken"
+          @select-slot="battle.selectSlot"
           @remove-token="battle.removeTokenFromSlot"
-          @drop-token="({ index, token }) => battle.placeTokenInSlot(index, token)"
+          @drop-token="({ index, token, fromSlotIndex }) => battle.placeTokenInSlot(index, token, fromSlotIndex)"
+          @return-token="battle.returnTokenToBank"
           @attack="battle.checkSyntaxAttack"
           @hint="battle.requestHint"
           @reset="battle.resetSlots"

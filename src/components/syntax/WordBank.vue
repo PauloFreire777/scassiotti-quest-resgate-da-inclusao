@@ -1,7 +1,8 @@
 <script setup>
+import { ref } from 'vue';
 import WordTile from './WordTile.vue';
 
-defineProps({
+const props = defineProps({
   tokens: {
     type: Array,
     required: true,
@@ -17,16 +18,54 @@ defineProps({
   }
 });
 
-const emit = defineEmits(['select', 'dragstart', 'dragend']);
+const emit = defineEmits(['select', 'returnToken', 'dragstart', 'dragend']);
+
+const isBankDragOver = ref(false);
+
+const handleDragOver = (e) => {
+  if (props.disabled) return;
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  isBankDragOver.value = true;
+};
+
+const handleDragLeave = () => {
+  isBankDragOver.value = false;
+};
+
+const handleDrop = (e) => {
+  if (props.disabled) return;
+  e.preventDefault();
+  isBankDragOver.value = false;
+  try {
+    const raw = e.dataTransfer.getData('text/plain');
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    const token = parsed.token || parsed;
+    if (token) {
+      emit('returnToken', token);
+    }
+  } catch (err) {
+    console.warn('Erro ao devolver carta para o banco:', err);
+  }
+};
 </script>
 
 <template>
-  <div class="w-full" role="group" aria-label="Palavras disponíveis">
+  <div
+    class="w-full rounded-2xl p-1.5 transition-all duration-150"
+    :class="isBankDragOver ? 'bg-white/10 ring-2 ring-amber-300/60' : ''"
+    role="group"
+    aria-label="Palavras disponíveis"
+    @dragover="handleDragOver"
+    @dragleave="handleDragLeave"
+    @drop="handleDrop"
+  >
     <!-- Grade dinâmica de cartas disponíveis -->
     <TransitionGroup
       name="tokens-list"
       tag="div"
-      class="relative flex flex-wrap items-center justify-center gap-3 sm:gap-4 min-h-[68px]"
+      class="relative flex flex-wrap items-center justify-center gap-2.5 sm:gap-3.5 min-h-[60px]"
     >
       <WordTile
         v-for="token in tokens"

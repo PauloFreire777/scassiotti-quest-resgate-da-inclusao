@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { Sparkles, AlertCircle } from 'lucide-vue-next';
+import { Sparkles, AlertCircle, X } from 'lucide-vue-next';
 
 const props = defineProps({
   token: {
@@ -10,6 +10,10 @@ const props = defineProps({
   isSlotted: {
     type: Boolean,
     default: false
+  },
+  slotIndex: {
+    type: Number,
+    default: null
   },
   isInvalid: {
     type: Boolean,
@@ -29,18 +33,16 @@ const emit = defineEmits(['click', 'dragstart', 'dragend']);
 
 const isDragging = ref(false);
 
-/**
- * CORREÇÃO: o original marcava `draggable="true"` mas nunca gravava o token em
- * `dataTransfer`, então o `drop` do socket recebia vazio e nada acontecia.
- * Em telas de toque o HTML5 DnD não existe — por isso o toque (click) continua
- * sendo o caminho principal e o arrastar é um complemento para desktop.
- */
 const onDragStart = (event) => {
   if (props.disabled) {
     event.preventDefault();
     return;
   }
-  event.dataTransfer.setData('text/plain', JSON.stringify(props.token));
+  const payload = {
+    token: props.token,
+    fromSlotIndex: props.isSlotted ? props.slotIndex : null
+  };
+  event.dataTransfer.setData('text/plain', JSON.stringify(payload));
   event.dataTransfer.effectAllowed = 'move';
   isDragging.value = true;
   emit('dragstart', props.token);
@@ -57,23 +59,33 @@ const onDragEnd = () => {
     type="button"
     draggable="true"
     :disabled="disabled"
-    class="tile"
+    class="tile group"
     :class="{
       'tile--placed': isSlotted,
       'tile--dragging': isDragging,
       'tile--hint': isHinted && !isInvalid,
       'tile--invalid': isInvalid
     }"
-    :aria-label="isSlotted ? `${token.text} (toque para remover)` : token.text"
-    @click="emit('click', token)"
+    :title="isSlotted ? 'Clique para devolver à lista ou arraste para outro espaço' : 'Clique ou arraste para encaixar na frase'"
+    :aria-label="isSlotted ? `${token.text} (clique para devolver à lista)` : token.text"
+    @click.stop="emit('click', token)"
     @dragstart="onDragStart"
     @dragend="onDragEnd"
   >
     <span class="min-w-0 break-normal leading-tight">{{ token.text }}</span>
 
-    <!-- Selos de estado no canto da carta: não ocupam espaço do texto e não dependem só de cor -->
+    <!-- Indicador discreto de remoção no hover quando a palavra está num slot superior -->
     <span
-      v-if="isHinted && !isInvalid"
+      v-if="isSlotted && !isInvalid"
+      class="absolute -top-2 -right-2 grid place-items-center w-6 h-6 rounded-full bg-slate-900 text-amber-200 border-2 border-amber-300/80 shadow-md opacity-85 group-hover:opacity-100 group-hover:scale-110 transition-all"
+      aria-hidden="true"
+    >
+      <X class="w-3.5 h-3.5" stroke-width="3" />
+    </span>
+
+    <!-- Selos de estado no canto da carta -->
+    <span
+      v-if="isHinted && !isInvalid && !isSlotted"
       class="absolute -top-2 -right-2 grid place-items-center w-7 h-7 rounded-full bg-sky-400 text-sky-950 border-2 border-paper shadow-md"
       aria-hidden="true"
     >

@@ -20,7 +20,7 @@ const emit = defineEmits(['openMenu', 'openMap', 'openTheory', 'restartGame']);
 </script>
 
 <template>
-  <header class="shrink-0 bg-slate-950 pt-[max(0.5rem,env(safe-area-inset-top))]">
+  <header class="shrink-0 bg-slate-950/75 backdrop-blur-md border-b border-white/10 pt-[max(0.5rem,env(safe-area-inset-top))]">
    <div class="mx-auto w-full max-w-5xl flex items-center gap-2 sm:gap-3 px-3 sm:px-6 py-2">
     <button
       type="button"

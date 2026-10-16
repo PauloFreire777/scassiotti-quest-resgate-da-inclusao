@@ -12,8 +12,6 @@ const props = defineProps({
 const visible = ref(false);
 let timer = null;
 
-// Cada `feedbackMessage` novo é um objeto novo → o balão reaparece e some sozinho.
-// Erros e dicas ficam mais tempo, pois o leitor L2 precisa de tempo para ler.
 watch(() => props.feedback, (fb) => {
   clearTimeout(timer);
   if (!fb) {
@@ -27,7 +25,6 @@ watch(() => props.feedback, (fb) => {
 
 onBeforeUnmount(() => clearTimeout(timer));
 
-// Cada tipo tem cor + ÍCONE DIFERENTE (✓, ✕, lâmpada, alerta): nunca depende só de cor.
 const style = computed(() => {
   switch (props.feedback?.type) {
     case 'success':
@@ -53,12 +50,12 @@ const style = computed(() => {
       role="status"
       aria-live="polite"
     >
-      <!-- Avatar da professora com selo do tipo de mensagem -->
+      <!-- Avatar RPG da professora com selo do tipo de mensagem -->
       <div class="relative shrink-0">
         <img
-          src="/images/teacher_sprite.webp"
-          alt=""
-          class="w-14 h-14 rounded-full object-cover object-top bg-slate-800 border-2 border-paper-400"
+          src="/images/scassiotti_rpg.png"
+          alt="Profª Scassiotti"
+          class="w-14 h-14 rounded-full object-cover object-top bg-slate-900 border-2 border-amber-500 shadow-md"
         />
         <span class="absolute -bottom-1 -right-1 grid place-items-center w-7 h-7 rounded-full border-2 border-paper" :class="style.badge">
           <component :is="style.icon" class="w-4 h-4" stroke-width="3" aria-hidden="true" />
@@ -67,7 +64,14 @@ const style = computed(() => {
 
       <div class="min-w-0 pt-0.5">
         <p v-if="feedback.title" class="text-base font-black leading-tight" :class="style.title">{{ feedback.title }}</p>
-        <p class="text-base sm:text-lg font-bold leading-snug">{{ feedback.text }}</p>
+        <p class="text-sm sm:text-base font-bold leading-snug mt-0.5">{{ feedback.text }}</p>
+        <!-- Frase contextualizada revelada ao clicar em "Dica" -->
+        <p
+          v-if="feedback.contextSentence"
+          class="mt-1.5 rounded-xl bg-amber-500/15 border border-amber-600/35 px-2.5 py-1 text-xs font-extrabold text-amber-950 leading-snug"
+        >
+          💡 Contexto: “{{ feedback.contextSentence }}”
+        </p>
       </div>
 
       <button

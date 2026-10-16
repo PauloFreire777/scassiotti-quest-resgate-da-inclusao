@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, watch, onBeforeUnmount } from 'vue';
-import { Heart } from 'lucide-vue-next';
+import { Heart, HeartCrack } from 'lucide-vue-next';
 import SignPrompt from './SignPrompt.vue';
 
 const props = defineProps({
@@ -51,33 +51,79 @@ const props = defineProps({
   isAttacking: {
     type: Boolean,
     default: false
+  },
+  combatAnimState: {
+    type: String,
+    default: null
   }
 });
 
 const MAX_HEARTS = 3;
 
-// A professora tem 3 "corações" (cada erro tira 1) — mais claro do que "65 HP".
-const hearts = computed(() => Math.ceil((props.playerHp / props.maxPlayerHp) * MAX_HEARTS));
+// A professora tem 3 "corações" (cada erro tira 1)
+const hearts = computed(() => Math.max(0, Math.ceil((props.playerHp / props.maxPlayerHp) * MAX_HEARTS)));
 const enemyPct = computed(() => Math.max(0, Math.min(100, (props.enemyHp / props.maxEnemyHp) * 100)));
 const isDefeated = computed(() => props.enemyHp <= 0);
 
 const enemyHit = ref(false);
 const playerHit = ref(false);
+const spellActive = ref(false);
+const breakingHeartIndex = ref(null);
+const useSolidFrameFallback = ref(false);
 const timers = [];
 
-const flag = (target) => {
+const flag = (target, duration = 680) => {
   target.value = false;
   requestAnimationFrame(() => {
     target.value = true;
-    timers.push(setTimeout(() => (target.value = false), 600));
+    timers.push(setTimeout(() => (target.value = false), duration));
   });
 };
 
-watch(() => props.enemyHp, (now, before) => {
-  if (now < before) flag(enemyHit);
+watch(
+  () => props.combatAnimState,
+  (state) => {
+    if (state === 'hero-attack') {
+      flag(spellActive, 560);
+    }
+  }
+);
+
+watch(
+  () => props.enemyHp,
+  (now, before) => {
+    if (now < before) flag(enemyHit, 700);
+  }
+);
+
+watch(
+  () => props.playerHp,
+  (now, before) => {
+    if (now < before) {
+      const beforeHearts = Math.max(1, Math.ceil((before / props.maxPlayerHp) * MAX_HEARTS));
+      breakingHeartIndex.value = beforeHearts;
+      flag(playerHit, 620);
+      timers.push(
+        setTimeout(() => {
+          breakingHeartIndex.value = null;
+        }, 720)
+      );
+    } else if (now > before) {
+      breakingHeartIndex.value = null;
+    }
+  }
+);
+
+const heroAnimationClass = computed(() => {
+  if (props.combatAnimState === 'hero-attack') return 'animate-hero-attack';
+  if (playerHit.value) return 'animate-hero-hit';
+  return 'animate-idle-bob';
 });
-watch(() => props.playerHp, (now, before) => {
-  if (now < before) flag(playerHit);
+
+const monsterAnimationClass = computed(() => {
+  if (enemyHit.value) return 'animate-monster-hit';
+  if (props.combatAnimState === 'monster-attack') return 'animate-monster-attack';
+  return 'animate-idle-float';
 });
 
 onBeforeUnmount(() => timers.forEach(clearTimeout));
@@ -85,16 +131,11 @@ onBeforeUnmount(() => timers.forEach(clearTimeout));
 
 <template>
   <section
-    class="relative isolate flex flex-col overflow-hidden scene-bg min-h-[300px]"
-    aria-label="Cena de batalha"
+    class="relative isolate flex flex-col overflow-hidden min-h-[300px]"
+    aria-label="Arena de batalha"
   >
-    <!-- Cenário: janelas da biblioteca + piso -->
-    <div class="scene-window" style="left: 5%" aria-hidden="true"></div>
-    <div class="scene-window" style="right: 5%" aria-hidden="true"></div>
-    <div class="scene-floor" aria-hidden="true"></div>
-
-    <!-- Enunciado em Libras + Botão da Tela de Vídeo da Professora -->
-    <div class="relative z-20 px-3 pt-1 sm:pt-2 mx-auto w-full max-w-2xl">
+    <!-- Enunciado em Libras (Glosa em maiúsculas + Botão Ver Vídeo) -->
+    <div class="relative z-20 px-3 pt-1.5 sm:pt-2.5 mx-auto w-full max-w-2xl">
       <SignPrompt
         :video-url="videoUrl"
         :gloss="librasGloss"
@@ -105,63 +146,101 @@ onBeforeUnmount(() => timers.forEach(clearTimeout));
       />
     </div>
 
-    <!-- Palco dos personagens: proporção equilibrada entre Professora Scassiotti e o Monstro -->
-    <div class="relative z-10 flex-1 min-h-[200px] mx-auto w-full max-w-4xl">
-      <div class="absolute inset-0 flex items-end justify-between gap-2 px-3 sm:px-[6%] pb-8 sm:pb-9">
+    <!-- Feitiço dourado saindo do livro mágico da Profª Scassiotti em direção ao monstro -->
+    <div v-if="spellActive" class="spell-projectile-track" aria-hidden="true">
+      <div class="spell-beam"></div>
+      <div class="spell-orb"></div>
+    </div>
 
-        <!-- Professora (proporção equilibrada — sem estourar o palco) -->
-        <div class="relative h-full w-[49%] max-w-[19.5rem] flex flex-col items-center justify-end">
+    <!-- Palco dos personagens: alinhados sobre o altar iluminado (esquerda) e o altar sombrio (direita) -->
+    <div class="relative z-10 flex-1 min-h-[210px] mx-auto w-full max-w-6xl">
+      <div class="absolute inset-0 flex items-end justify-between gap-3 px-3 sm:px-[7%] lg:px-[9%] pb-7 sm:pb-9">
+
+        <!-- HEROÍNA: Profª Scassiotti sobre o pedestal iluminado dourado/azul da esquerda -->
+        <div class="relative h-full w-[48%] max-w-[20.5rem] flex flex-col items-center justify-end">
           <div class="relative flex-1 min-h-0 w-full flex items-end justify-center">
+            <div class="pedestal-aura-hero" aria-hidden="true"></div>
+            <div class="ground-shadow" aria-hidden="true"></div>
+
             <div
-              class="relative h-[94%] sm:h-[96%] max-w-full flex items-end justify-center"
-              :class="playerHit ? 'animate-hit' : 'animate-idle-bob'"
+              class="relative z-10 h-[95%] sm:h-[98%] max-w-full flex items-end justify-center"
+              :class="heroAnimationClass"
             >
               <img
-                src="/images/teacher_sprite.webp"
-                alt="Professora Scassiotti"
-                class="h-full max-h-full w-auto max-w-full object-contain object-bottom fade-edge-right select-none pointer-events-none drop-shadow-[0_12px_20px_rgba(8,5,28,0.55)]"
+                :src="useSolidFrameFallback ? '/images/scassiotti_rpg.jpg' : '/images/scassiotti_rpg.png'"
+                alt="Professora Scassiotti com livro mágico"
+                class="h-full max-h-full w-auto max-w-full object-contain object-bottom select-none pointer-events-none"
+                :class="useSolidFrameFallback ? 'rpg-portrait-frame' : 'hero-sprite'"
                 draggable="false"
+                @error="useSolidFrameFallback = true"
               />
             </div>
-            <div class="teacher-desk z-10" aria-hidden="true"></div>
           </div>
 
+          <!-- Placa de identificação e Corações de Vida (com animação de coração partindo ao errar) -->
           <div class="relative z-20 nameplate w-full rounded-2xl px-3 py-1.5 mt-2 flex flex-col items-start gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
-            <span class="text-sm sm:text-base font-black leading-tight">Profª Scassiotti</span>
-            <span class="flex gap-0.5 shrink-0" role="img" :aria-label="`${hearts} de ${MAX_HEARTS} vidas`">
-              <Heart
+            <span class="text-sm sm:text-base font-black leading-tight text-amber-100 drop-shadow">
+              Profª Scassiotti
+            </span>
+            <span class="flex items-center gap-1 shrink-0" role="img" :aria-label="`${hearts} de ${MAX_HEARTS} vidas`">
+              <span
                 v-for="n in MAX_HEARTS"
                 :key="n"
-                class="w-6 h-6 transition-all duration-300"
-                :class="n <= hearts ? 'fill-rose-500 text-rose-300' : 'fill-transparent text-slate-500 scale-90'"
-                aria-hidden="true"
-              />
+                class="relative inline-flex items-center justify-center w-6 h-6"
+              >
+                <!-- Coração partindo-se antes de apagar -->
+                <HeartCrack
+                  v-if="breakingHeartIndex === n"
+                  class="w-6 h-6 text-rose-400 fill-rose-500/80 animate-heart-break drop-shadow-[0_0_10px_rgba(244,63,94,0.9)]"
+                  aria-hidden="true"
+                />
+                <!-- Coração ativo ou apagado -->
+                <Heart
+                  v-else
+                  class="w-6 h-6 transition-all duration-300"
+                  :class="
+                    n <= hearts
+                      ? 'fill-rose-500 text-rose-300 drop-shadow-[0_0_8px_rgba(244,63,94,0.6)]'
+                      : 'fill-transparent text-slate-500/70 scale-90'
+                  "
+                  aria-hidden="true"
+                />
+              </span>
             </span>
           </div>
         </div>
 
-        <!-- Monstro (proporção equivalente à da professora) -->
-        <div class="relative h-full w-[49%] max-w-[19.5rem] flex flex-col items-center justify-end">
+        <!-- MONSTRO / CHEFE: Alinhado sobre o pedestal sombrio roxo da direita -->
+        <div class="relative h-full w-[48%] max-w-[20.5rem] flex flex-col items-center justify-end">
           <div class="relative flex-1 min-h-0 w-full flex items-end justify-center">
+            <div class="pedestal-aura-monster" aria-hidden="true"></div>
             <div class="ground-shadow" aria-hidden="true"></div>
+
             <div
-              class="relative h-[90%] sm:h-[92%] max-w-full flex items-end justify-center transition-all duration-700"
+              class="relative z-10 h-[92%] sm:h-[95%] max-w-full flex items-end justify-center transition-all duration-500"
               :class="[
-                enemyHit ? 'animate-hit' : 'animate-idle-float',
+                monsterAnimationClass,
                 isDefeated ? 'opacity-0 scale-90 grayscale' : ''
               ]"
             >
               <img
                 :src="enemy.avatar || '/images/monster_sprite.webp'"
                 :alt="enemy.name"
-                class="h-full max-h-full w-auto max-w-full object-contain object-bottom select-none pointer-events-none drop-shadow-[0_14px_22px_rgba(8,5,28,0.6)]"
+                class="monster-sprite h-full max-h-full w-auto max-w-full object-contain object-bottom select-none pointer-events-none"
                 draggable="false"
               />
             </div>
           </div>
 
-          <div class="nameplate w-full rounded-2xl px-3 py-1.5 mt-2">
-            <div class="text-sm sm:text-base font-black leading-tight mb-1 truncate">{{ enemy.name }}</div>
+          <div class="relative z-20 nameplate w-full rounded-2xl px-3 py-1.5 mt-2">
+            <div class="flex items-center justify-between gap-2 mb-1">
+              <span class="text-sm sm:text-base font-black leading-tight text-purple-100 truncate">
+                {{ enemy.name }}
+              </span>
+              <span class="text-xs font-extrabold text-rose-300 shrink-0">
+                {{ Math.max(0, enemyHp) }}/{{ maxEnemyHp }}
+              </span>
+            </div>
             <div
               class="hp-track"
               role="progressbar"
